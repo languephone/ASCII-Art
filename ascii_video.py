@@ -3,7 +3,7 @@ import pygame
 import sys
 
 # Image Size
-HEIGHT = int(1080 / 10)
+HEIGHT = int(1080 / 12)
 WIDTH = int(1920 / 10)
 
 # Colors
@@ -14,7 +14,7 @@ WHITE = (255, 255, 255)
 # Fonts
 FONT_SIZE = 9
 
-ascii_range = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. """
+ascii_range = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                         """
 ascii_reverse = list(ascii_range)
 ascii_reverse.reverse()
 
@@ -36,7 +36,7 @@ def update_screen():
 
 # Initialize Pygame
 pygame.init()
-screen = pygame.display.set_mode((800, 800))
+screen = pygame.display.set_mode((1200, 800))
 pygame.display.set_caption("Ascii Art")
 smallFont = pygame.font.SysFont('sfnsmono', FONT_SIZE)
 
@@ -47,15 +47,18 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
 
+    # Capture video and resize
     ret, frame = capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     small = cv2.resize(gray, (WIDTH, HEIGHT))
     # cropped = small[60:480, 250:710]
 
+    # Render ascii_text
     screen.fill(BLACK)
     
     for index, row in enumerate(small):
         row_text = smallFont.render(convert_to_ascii(row), False, WHITE)
-        screen.blit(row_text, (0, index * FONT_SIZE))
+        # increment y position of each text row by the # of pixels in the font
+        screen.blit(row_text, (0, index * (FONT_SIZE - 1)))
 
     pygame.display.flip()
