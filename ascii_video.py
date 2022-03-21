@@ -2,6 +2,10 @@ import cv2
 import pygame
 import sys
 
+# TODO: Mirror-reverse images
+# TODO: Calculate screen size and crop area dynamically
+# TODO: Understand font size vertical & horizontal pixels
+
 # Image Size
 HEIGHT = int(1080 / 12)
 WIDTH = int(1920 / 10)
@@ -36,7 +40,7 @@ def update_screen():
 
 # Initialize Pygame
 pygame.init()
-screen = pygame.display.set_mode((1200, 800))
+screen = pygame.display.set_mode((1100, 750))
 pygame.display.set_caption("Ascii Art")
 smallFont = pygame.font.SysFont('sfnsmono', FONT_SIZE)
 
@@ -51,12 +55,13 @@ while True:
     ret, frame = capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     small = cv2.resize(gray, (WIDTH, HEIGHT))
+    flipped = cv2.flip(small, 1)
     # cropped = small[60:480, 250:710]
 
     # Render ascii_text
     screen.fill(BLACK)
     
-    for index, row in enumerate(small):
+    for index, row in enumerate(flipped):
         row_text = smallFont.render(convert_to_ascii(row), False, WHITE)
         # increment y position of each text row by the # of pixels in the font
         screen.blit(row_text, (0, index * (FONT_SIZE - 1)))
