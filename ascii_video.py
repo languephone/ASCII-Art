@@ -3,39 +3,59 @@ import pygame
 import sys
 
 # TODO: Calculate screen size and crop area dynamically
-# TODO: Understand font size vertical & horizontal pixels
+# TODO: Deal with gap in text rows
 
-# Image Size
-VSCALE = 0.07
-HSCALE = 0.1
+# Window Size
+WIN_WIDTH = 1100
+WIN_HEIGHT = 900
+
+# Fonts
+FONT_SIZE = 11
 
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-# Fonts
-FONT_SIZE = 9
-
-ascii_range = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                         """
-ascii_reverse = list(ascii_range)
-ascii_reverse.reverse()
-
-# Convert 8-bit (256) colour range to ascii range 
-division_factor = 256 / len(ascii_range)
-
-capture = cv2.VideoCapture(0)
+# Debug Flat
+DEBUG = False
 
 def resize_image(image):
+    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    small = cv2.resize(gray, None, fx=HSCALE, fy=VSCALE,
-                       interpolation = cv2.INTER_AREA)
+    # Reduce pixels for processing
+    small = cv2.resize(gray, (h_chars, v_chars),
+                        interpolation = cv2.INTER_AREA)
+    # Mirror reverse
+    flipped = cv2.flip(small, 1)
 
-    return small
+    return flipped
 
 
 def convert_to_ascii(image_row):
     row_text = (''.join([ascii_reverse[int(pixel / division_factor)]
-                for pixel in row]))
+                for pixel in image_row]))
+
+    return row_text
+
+
+def print_columns_test(row):
+    # Define numbers 1 to 10 to repeat
+    char_bank = [i for i in range(10)]
+    # Replace last character with . to easily see end of column
+    char_bank[-1] = '.'
+    # Define characters to print as list
+    col_list = [char_bank[i % 10] for i in range(len(row))]
+    # Join characters into single string
+    col_text = (''.join([str(i) for i in row_list]))
+
+    return col_text
+
+
+def print_rows_test(index, row):
+    # Define characters to print as list
+    row_list = [index for i in range(len(row))]
+    # Join characters into single string
+    row_text = (''.join([index for i in row_list]))
 
     return row_text
 
@@ -51,10 +71,14 @@ def check_events():
 
 
 def check_keydown_events(event):
+    global ascii_range, ascii_reverse, division_factor
     if event.key == pygame.K_UP:
-        print('up key')
+        ascii_range += " "
+        ascii_reverse = list(ascii_range)
+        ascii_reverse.reverse()
     elif event.key == pygame.K_DOWN:
-        print('down key')
+        if ascii_reverse[0] == " ":
+            ascii_reverse = ascii_reverse[1:]
 
 
 def update_screen():
@@ -62,38 +86,70 @@ def update_screen():
     screen.blit(ascii_text)
 
 
-# Initialize Pygame
+# Define variables
+ascii_range = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """
+ascii_reverse = list(ascii_range)
+ascii_reverse.reverse()
+
+# 8-bit (256) greyscale range to ascii range conversion factor
+division_factor = 256 / len(ascii_reverse)
+
+# Create cv2 webcam capture object
+capture = cv2.VideoCapture(0)
+
+# Setup Pygame
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((1100, 750))
+screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption("Ascii Art")
-smallFont = pygame.font.SysFont('couriernew', FONT_SIZE)
+font = pygame.font.SysFont('couriernew', FONT_SIZE)
+
+# Calculate size in pixels of chars based on font
+line_width, line_height  = font.size('#' * 10)
+char_width = line_width / 10
+# To test line hight, use chr(9608), which is a full height character
+
+# Get sample frame size for resizing
+ret, frame = capture.read()
+img_width = len(frame)
+img_height = len(frame[0])
+img_ratio = img_width / img_height
+
+# Define number of text characters to fit on screen
+h_chars = int(WIN_WIDTH / char_width)
+v_chars = int(WIN_HEIGHT / line_height)
+
+print(f'char width: {char_width}, line height: {line_height}')
+print(f'horiz. chars: {h_chars}, vert. chars: {v_chars}')
 
 while True:
-
-    for event in pygame.event.get():
-        # Check if game quit
-        if event.type == pygame.QUIT:
-            sys.exit()
 
     check_events()
 
     # Capture video and resize
     ret, frame = capture.read()
 
-    small = resize_image(frame)
-    flipped = cv2.flip(small, 1)
+    
+    flipped = resize_image(frame)
     # cropped = small[60:480, 250:710]
 
-    # Render ascii_text
+    # Fill screen with black on each frame to overwrite previous frame
     screen.fill(BLACK)
     
     for index, row in enumerate(flipped):
-        row_text = smallFont.render(convert_to_ascii(row), False, WHITE)
-        row_rect = row_text.get_rect()
-        pygame.draw.rect(screen, WHITE, pygame.Rect(row_rect))
+        
+        if DEBUG:
+            row_text = font.render(print_columns_test(row), False, WHITE)
+            row_text = font.render(str(index), False, WHITE)
+            pygame.draw.line(screen, (0, 255, 255), (0, index * line_height),
+                           (WIN_WIDTH, index * line_height))
+
+        # Create text to 
+        row_text = font.render(convert_to_ascii(row), False, WHITE)
+
         # increment y position of each text row by the # of pixels in the font
-        screen.blit(row_text, (0, index * (FONT_SIZE - 1)))
+        screen.blit(row_text, (0, index * line_height))
+
 
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(60)
