@@ -49,6 +49,17 @@ class AsciiVideo:
         pygame.display.set_caption("Ascii Art")
         self._create_font_object()
 
+        self._calc_pixel_size()
+
+
+    def _create_font_object(self):
+        """Generate pypgame font object used to render text on screen."""
+        self.font = pygame.font.SysFont('couriernew', self.font_size)
+
+
+    def _calc_pixel_size(self):
+        """Use window size and font size to calculate chars needed."""
+        
         # Calculate size in pixels of chars based on font
         line_width, self.line_height  = self.font.size('#' * 10)
         self.char_width = line_width / 10
@@ -58,12 +69,10 @@ class AsciiVideo:
         self.h_chars = int(self.win_width / self.char_width)
         self.v_chars = int(self.win_height / self.line_height)
 
-        print(f'char width: {self.char_width}, line height: {self.line_height}')
-        print(f'horiz. chars: {self.h_chars}, vert. chars: {self.v_chars}')
+        print(f'Font Size: {self.font_size}')
+        print(f'Char Width: {self.char_width}, Line Height: {self.line_height}')
+        print(f'Horiz. Chars: {self.h_chars}, Vert. Chars: {self.v_chars}')
 
-    def _create_font_object(self):
-        """Generate pypgame font object used to render text on screen."""
-        self.font = pygame.font.SysFont('couriernew', self.font_size)
 
     def _resize_image(self, image):
         # Convert to grayscale
@@ -83,14 +92,33 @@ class AsciiVideo:
 
         return row_text
 
+
     def check_events(self):
+        """Respond to keypresses and mouse events."""
         for event in pygame.event.get():
             # Check if game quit
             if event.type == pygame.QUIT:
                 sys.exit()
             # Check for pressed keys
-            # elif event.type == pygame.KEYDOWN:
-            #     check_keydown_events(event)
+            elif event.type == pygame.KEYDOWN:
+                self.check_keydown_events(event)
+
+    def check_keydown_events(self, event):
+        if event.key == pygame.K_UP:
+            ascii_range += " "
+            ascii_reverse = list(ascii_range)
+            ascii_reverse.reverse()
+        elif event.key == pygame.K_DOWN:
+            if ascii_reverse[0] == " ":
+                ascii_reverse = ascii_reverse[1:]
+        elif event.key == pygame.K_LEFT:
+            self.font_size -= 1
+            self._create_font_object() 
+            self._calc_pixel_size()
+        elif event.key == pygame.K_RIGHT:
+            self.font_size += 1
+            self._create_font_object()
+            self._calc_pixel_size()
 
 
     def run_game(self):
@@ -151,30 +179,3 @@ if __name__ == '__main__':
 #     row_text = (''.join([index for i in row_list]))
 
 #     return row_text
-
-
-# def check_events():
-#     for event in pygame.event.get():
-#         # Check if game quit
-#         if event.type == pygame.QUIT:
-#             sys.exit()
-#         # Check for pressed keys
-#         elif event.type == pygame.KEYDOWN:
-#             check_keydown_events(event)
-
-
-# def check_keydown_events(event):
-#     global ascii_range, ascii_reverse, division_factor, FONT_SIZE
-#     if event.key == pygame.K_UP:
-#         ascii_range += " "
-#         ascii_reverse = list(ascii_range)
-#         ascii_reverse.reverse()
-#     elif event.key == pygame.K_DOWN:
-#         if ascii_reverse[0] == " ":
-#             ascii_reverse = ascii_reverse[1:]
-#     elif event.key == pygame.K_LEFT:
-#         FONT_SIZE -= 1
-#         create_font_object(FONT_SIZE) 
-#     elif event.key == pygame.K_RIGHT:
-#         FONT_SIZE += 1
-#         create_font_object(FONT_SIZE) 
