@@ -17,6 +17,7 @@ class AsciiVideo:
         # Fonts
         self.font_size = 10
         self.font_name = 'couriernew'
+        self.line_height_adjustment = 4
 
         # Colours
         self.BLACK = (0, 0, 0)
@@ -63,6 +64,7 @@ class AsciiVideo:
         
         # Calculate size in pixels of chars based on font
         line_width, self.line_height  = self.font.size('#' * 20)
+        self.line_height -= self.line_height_adjustment
         self.char_width = line_width / 20
         # To test line hight, use chr(9608), which is a full height character
 
