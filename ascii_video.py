@@ -6,11 +6,10 @@ import sys
 # TODO: Deal with gap in text rows
 
 # Window Size
-WIN_WIDTH = 1100
-WIN_HEIGHT = 900
+WIN_WIDTH = 1500
 
 # Fonts
-FONT_SIZE = 11
+FONT_SIZE = 9
 
 # Colors
 BLACK = (0, 0, 0)
@@ -97,6 +96,13 @@ division_factor = 256 / len(ascii_reverse)
 # Create cv2 webcam capture object
 capture = cv2.VideoCapture(0)
 
+# Get sample frame size for window size definition
+ret, frame = capture.read()
+img_width = len(frame)
+img_height = len(frame[0])
+img_ratio = img_width / img_height
+WIN_HEIGHT = int(WIN_WIDTH * img_ratio)
+
 # Setup Pygame
 pygame.init()
 clock = pygame.time.Clock()
@@ -108,12 +114,6 @@ font = pygame.font.SysFont('couriernew', FONT_SIZE)
 line_width, line_height  = font.size('#' * 10)
 char_width = line_width / 10
 # To test line hight, use chr(9608), which is a full height character
-
-# Get sample frame size for resizing
-ret, frame = capture.read()
-img_width = len(frame)
-img_height = len(frame[0])
-img_ratio = img_width / img_height
 
 # Define number of text characters to fit on screen
 h_chars = int(WIN_WIDTH / char_width)
@@ -152,4 +152,4 @@ while True:
 
 
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(30)
