@@ -16,6 +16,7 @@ class AsciiVideo:
 
         # Fonts
         self.font_size = 10
+        self.font_name = 'couriernew'
 
         # Colours
         self.BLACK = (0, 0, 0)
@@ -35,7 +36,7 @@ class AsciiVideo:
         # Create cv2 webcam capture object
         self.capture = cv2.VideoCapture(0)
 
-        # Get sample frame size for window size definition
+        # Get camera resolution and frame rate to define pixels needed
         img_width = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
         img_height = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
         img_ratio = img_height / img_width
@@ -54,7 +55,7 @@ class AsciiVideo:
 
     def _create_font_object(self):
         """Generate pypgame font object used to render text on screen."""
-        self.font = pygame.font.SysFont('couriernew', self.font_size)
+        self.font = pygame.font.SysFont(self.font_name, self.font_size)
 
 
     def _calc_pixel_size(self):
