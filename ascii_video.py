@@ -46,7 +46,7 @@ class AsciiVideo:
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((self.win_width, self.win_height))
-        pygame.display.set_caption("Ascii Art")
+        pygame.display.set_caption('Ascii Art')
         self._create_font_object()
 
         self._calc_pixel_size()
@@ -106,12 +106,11 @@ class AsciiVideo:
 
     def check_keydown_events(self, event):
         if event.key == pygame.K_UP:
-            ascii_range += " "
-            ascii_reverse = list(ascii_range)
-            ascii_reverse.reverse()
+            if len(self.ascii_reverse) > 71:
+                self.change_contrast(-1)
         elif event.key == pygame.K_DOWN:
-            if ascii_reverse[0] == " ":
-                ascii_reverse = ascii_reverse[1:]
+            if len(self.ascii_reverse) < 100:
+                self.change_contrast(1)
         elif event.key == pygame.K_LEFT:
             # Limit min size to 6
             if self.font_size > 6:
@@ -128,6 +127,19 @@ class AsciiVideo:
         self.font_size += factor
         self._create_font_object()
         self._calc_pixel_size()
+
+
+    def change_contrast(self, factor):
+
+        # Use spaces on the end of the 
+        if factor < 0:
+            self.ascii_reverse.pop(0)
+            self.division_factor = 256 / len(self.ascii_reverse)
+        elif factor > 0:
+            self.ascii_reverse.insert(0, ' ')
+            self.division_factor = 256 / len(self.ascii_reverse)
+
+        print(f'New Contrast: {len(self.ascii_reverse)}')
 
 
     def run_game(self):
@@ -152,11 +164,11 @@ class AsciiVideo:
                     pygame.draw.line(screen, (0, 255, 255), (0, index * self.line_height),
                                    (self.win_width, index * self.line_height))
 
-                # Create text to 
+                # Create text to show on screen
                 row_text = self.font.render(
                                 self.convert_to_ascii(row), False, self.WHITE)
 
-                # increment y position of each text row by the # of pixels in the font
+                # increment y position of each text row by the line height of the font
                 self.screen.blit(row_text, (0, index * self.line_height))
 
 
