@@ -2,7 +2,7 @@ import cv2
 import pygame
 import sys
 
-# TODO: Calculate screen size and crop area dynamically
+# TODO: Calculate crop area dynamically
 # TODO: Deal with gap in text rows
 
 class AsciiVideo:
@@ -12,7 +12,7 @@ class AsciiVideo:
         """Define variables and initialize the game."""
         
         # Window size
-        self.win_width = 960
+        self.win_width = 1152
 
         # Fonts
         self.font_size = 10
@@ -61,8 +61,8 @@ class AsciiVideo:
         """Use window size and font size to calculate chars needed."""
         
         # Calculate size in pixels of chars based on font
-        line_width, self.line_height  = self.font.size('#' * 10)
-        self.char_width = line_width / 10
+        line_width, self.line_height  = self.font.size('#' * 20)
+        self.char_width = line_width / 20
         # To test line hight, use chr(9608), which is a full height character
 
         # Define number of text characters to fit on screen
@@ -103,6 +103,7 @@ class AsciiVideo:
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
 
+
     def check_keydown_events(self, event):
         if event.key == pygame.K_UP:
             ascii_range += " "
@@ -112,13 +113,21 @@ class AsciiVideo:
             if ascii_reverse[0] == " ":
                 ascii_reverse = ascii_reverse[1:]
         elif event.key == pygame.K_LEFT:
-            self.font_size -= 1
-            self._create_font_object() 
-            self._calc_pixel_size()
+            # Limit min size to 6
+            if self.font_size > 6:
+                self.change_font_size(-1)
         elif event.key == pygame.K_RIGHT:
-            self.font_size += 1
-            self._create_font_object()
-            self._calc_pixel_size()
+            # Limit max size to 24
+            if self.font_size < 24:
+                self.change_font_size(1)
+
+
+    def change_font_size(self, factor):
+        """Update font size and re-calc char sizes."""
+
+        self.font_size += factor
+        self._create_font_object()
+        self._calc_pixel_size()
 
 
     def run_game(self):
@@ -158,24 +167,3 @@ class AsciiVideo:
 if __name__ == '__main__':
     av = AsciiVideo()
     av.run_game()
-
-# def print_columns_test(row):
-#     # Define numbers 1 to 10 to repeat
-#     char_bank = [i for i in range(10)]
-#     # Replace last character with . to easily see end of column
-#     char_bank[-1] = '.'
-#     # Define characters to print as list
-#     col_list = [char_bank[i % 10] for i in range(len(row))]
-#     # Join characters into single string
-#     col_text = (''.join([str(i) for i in row_list]))
-
-#     return col_text
-
-
-# def print_rows_test(index, row):
-#     # Define characters to print as list
-#     row_list = [index for i in range(len(row))]
-#     # Join characters into single string
-#     row_text = (''.join([index for i in row_list]))
-
-#     return row_text
