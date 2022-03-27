@@ -27,12 +27,12 @@ class AsciiVideo:
         self.DEBUG = False
 
         # Ascii characters
-        ascii_range = """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """
-        self.ascii_reverse = list(ascii_range)
-        self.ascii_reverse.reverse()
-
-        # 8-bit (256) greyscale range to ascii range conversion factor
-        self.division_factor = 256 / len(self.ascii_reverse)
+        self.ascii_sets = ["""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """,
+                               "Ñ@#W$9876543210?!abc;:+=-,._            ",
+                               "#WX?*:÷×+=-·        "
+                            ]
+        self.ascii_set = 0
+        self.set_ascii_range(0)
 
         # Create cv2 webcam capture object
         self.capture = cv2.VideoCapture(0)
@@ -109,10 +109,11 @@ class AsciiVideo:
 
     def check_keydown_events(self, event):
         if event.key == pygame.K_UP:
-            if len(self.ascii_reverse) > 71:
+            if len(self.ascii_reverse) > len(self.ascii_sets[self.ascii_set]):
                 self.change_contrast(-1)
         elif event.key == pygame.K_DOWN:
-            if len(self.ascii_reverse) < 100:
+            if len(self.ascii_reverse) < len(
+                    self.ascii_sets[self.ascii_set]) + 10:
                 self.change_contrast(1)
         elif event.key == pygame.K_LEFT:
             # Limit min size to 6
@@ -122,6 +123,8 @@ class AsciiVideo:
             # Limit max size to 24
             if self.font_size < 24:
                 self.change_font_size(1)
+        elif event.key == pygame.K_a:
+            self.set_ascii_range(1)
 
 
     def change_font_size(self, factor):
@@ -143,6 +146,22 @@ class AsciiVideo:
             self.division_factor = 256 / len(self.ascii_reverse)
 
         print(f'New Contrast: {len(self.ascii_reverse)}')
+
+
+    def set_ascii_range(self, increment):
+        
+        # Increment range by one
+        self.ascii_set += increment
+        # Ensure incrementing wraps back around to first of list
+        self.ascii_set = self.ascii_set % len(self.ascii_sets)
+        print(f'Ascii Range: {self.ascii_set}')
+        # Convert to list
+        self.ascii_reverse = list(self.ascii_sets[self.ascii_set])
+        # Reverse so that brighter pixels go higher in list
+        self.ascii_reverse.reverse()
+
+        # 8-bit (256) greyscale range to ascii range conversion factor
+        self.division_factor = 256 / len(self.ascii_reverse)
 
 
     def run_game(self):
