@@ -6,7 +6,7 @@ import sys
 # TODO: Deal with gap in text rows
 
 # Window Size
-WIN_WIDTH = 1500
+WIN_WIDTH = 960
 
 # Fonts
 FONT_SIZE = 9
@@ -101,12 +101,12 @@ ret, frame = capture.read()
 img_width = len(frame)
 img_height = len(frame[0])
 img_ratio = img_width / img_height
-WIN_HEIGHT = int(WIN_WIDTH * img_ratio)
+win_height = int(WIN_WIDTH * img_ratio)
 
 # Setup Pygame
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+screen = pygame.display.set_mode((WIN_WIDTH, win_height))
 pygame.display.set_caption("Ascii Art")
 font = pygame.font.SysFont('couriernew', FONT_SIZE)
 
@@ -117,7 +117,7 @@ char_width = line_width / 10
 
 # Define number of text characters to fit on screen
 h_chars = int(WIN_WIDTH / char_width)
-v_chars = int(WIN_HEIGHT / line_height)
+v_chars = int(win_height / line_height)
 
 print(f'char width: {char_width}, line height: {line_height}')
 print(f'horiz. chars: {h_chars}, vert. chars: {v_chars}')
