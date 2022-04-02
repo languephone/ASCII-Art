@@ -9,7 +9,7 @@ class AsciiVideo:
     """Overall class to run the ascii video program."""
 
     def __init__(self):
-        """Define variables and initialize the game."""
+        """Define variables and initialize the program."""
         
         # Window size
         self.win_width = 1152
@@ -54,7 +54,6 @@ class AsciiVideo:
         self.screen = pygame.display.set_mode((self.win_width, self.win_height))
         pygame.display.set_caption('Ascii Art')
         self._create_font_object()
-
         self._calc_pixel_size()
 
 
@@ -105,6 +104,7 @@ class AsciiVideo:
         for event in pygame.event.get():
             # Check if game quit
             if event.type == pygame.QUIT:
+                self.capture.release()
                 sys.exit()
             # Check for pressed keys
             elif event.type == pygame.KEYDOWN:
