@@ -1,6 +1,7 @@
 import cv2
 import pygame
 import sys
+from ascii_debug import AsciiDebug
 
 # TODO: Calculate crop area dynamically
 # TODO: Deal with gap in text rows
@@ -23,9 +24,6 @@ class AsciiVideo:
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255) 
         
-        # Debug Flag
-        self.DEBUG = False
-
         # Ascii characters
         self.ascii_sets = ["""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """,
                                "Ñ@#W$9876543210?!abc;:+=-,._            ",
@@ -55,6 +53,9 @@ class AsciiVideo:
         pygame.display.set_caption('Ascii Art')
         self._create_font_object()
         self._calc_pixel_size()
+
+        # Create debug object
+        self.debug = AsciiDebug(self)
 
 
     def _create_font_object(self):
@@ -109,6 +110,8 @@ class AsciiVideo:
             # Check for pressed keys
             elif event.type == pygame.KEYDOWN:
                 self.check_keydown_events(event)
+            elif event.type == pygame.KEYUP:
+                self.check_keyup_events(event)
 
 
     def check_keydown_events(self, event):
@@ -129,6 +132,12 @@ class AsciiVideo:
                 self.change_font_size(1)
         elif event.key == pygame.K_a:
             self.set_ascii_range(1)
+        elif event.key == pygame.K_d:
+            self.debug.status = True
+
+    def check_keyup_events(self, event):
+        if event.key == pygame.K_d:
+            self.debug.status = False
 
 
     def change_font_size(self, factor):
@@ -167,6 +176,11 @@ class AsciiVideo:
         # 8-bit (256) greyscale range to ascii range conversion factor
         self.division_factor = 256 / len(self.ascii_reverse)
 
+    def render_text(self, text):
+        rendered_text = self.font.render(text, False, self.WHITE)
+
+        return rendered_text
+
 
     def run_game(self):
         while True:
@@ -184,18 +198,17 @@ class AsciiVideo:
             
             for index, row in enumerate(flipped):
                 
-                if self.DEBUG:
-                    row_text = self.font.render(print_columns_test(row), False, self.WHITE)
-                    row_text = self.font.render(str(index), False, self.WHITE)
-                    pygame.draw.line(screen, (0, 255, 255), (0, index * self.line_height),
-                                   (self.win_width, index * self.line_height))
+                if self.debug.status:
+                    row_text = self.debug.print_rows_test(str(index), row)
+                else:
+                    # Define text to show on screen
+                    row_text = self.convert_to_ascii(row)
 
-                # Create text to show on screen
-                row_text = self.font.render(
-                                self.convert_to_ascii(row), False, self.WHITE)
+                # Create rendered text
+                rendered_text = self.render_text(row_text)
 
                 # increment y position of each text row by the line height of the font
-                self.screen.blit(row_text, (0, index * self.line_height))
+                self.screen.blit(rendered_text, (0, index * self.line_height))
 
 
             pygame.display.flip()
