@@ -36,6 +36,10 @@ class AsciiVideo:
 
         # Create cv2 webcam capture object
         self.capture = cv2.VideoCapture(0)
+        
+        # Exit program if no camera
+        if not self.capture.isOpened():
+            sys.exit("No camera detected")
 
         # Get camera resolution and frame rate to define pixels needed
         img_width = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
