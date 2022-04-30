@@ -5,6 +5,7 @@ from ascii_debug import AsciiDebug
 
 # TODO: Calculate crop area dynamically
 # TODO: Deal with gap in text rows
+# TODO: Display instructions on screen
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
@@ -123,12 +124,12 @@ class AsciiVideo:
                     self.ascii_sets[self.ascii_set]) + 10:
                 self.change_contrast(1)
         elif event.key == pygame.K_LEFT:
-            # Limit min size to 6
-            if self.font_size > 6:
+            # Limit min size to 7
+            if self.font_size > 7:
                 self.change_font_size(-1)
         elif event.key == pygame.K_RIGHT:
-            # Limit max size to 24
-            if self.font_size < 24:
+            # Limit max size to 22
+            if self.font_size < 22:
                 self.change_font_size(1)
         elif event.key == pygame.K_a:
             self.set_ascii_range(1)
