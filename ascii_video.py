@@ -2,9 +2,8 @@ import cv2
 import pygame
 import sys
 from ascii_debug import AsciiDebug
+from instructions import Instructions
 
-# TODO: Calculate crop area dynamically
-# TODO: Ensure window isn't larger than display size
 # TODO: Deal with gap in text rows dynamically
 # TODO: Display instructions on screen
 
@@ -60,8 +59,9 @@ class AsciiVideo:
             img_ratio = 4 / 3
         self.win_width = int(self.win_height * img_ratio)
         
-        # Set window size in pygame
-        self.screen = pygame.display.set_mode((self.win_width, self.win_height))
+        # Set window size in pygame, with 200 px for the instructions
+        self.screen = pygame.display.set_mode(
+            (self.win_width + 200, self.win_height))
 
         # Define how to crop image to fit window size
         img_adjustment = int(self.img_width / img_ratio)
@@ -72,8 +72,9 @@ class AsciiVideo:
         self._create_font_object()
         self._calc_pixel_size()
 
-        # Create debug object
+        # Create program objects
         self.debug = AsciiDebug(self)
+        self.instructions = Instructions(self)
 
 
     def _create_font_object(self):
@@ -216,10 +217,12 @@ class AsciiVideo:
             ret, frame = self.capture.read()
 
             flipped = self._resize_image(frame)
-            # cropped = small[60:480, 250:710]
 
             # Fill screen with black on each frame to overwrite previous frame
             self.screen.fill(self.BLACK)
+
+            # Print instructions
+            self.instructions.draw_instructions()
             
             for index, row in enumerate(flipped):
                 
