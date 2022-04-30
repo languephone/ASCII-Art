@@ -38,6 +38,7 @@ class AsciiDebug:
           self.row_text = av_object.font.render(
                self.print_columns_test(row), False, av_object.WHITE)
 
+
      def run_debug_rows(self, axis):
 
           if self.axis == 0:

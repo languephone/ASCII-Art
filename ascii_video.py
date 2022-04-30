@@ -13,9 +13,6 @@ class AsciiVideo:
 
     def __init__(self):
         """Define variables and initialize the program."""
-        
-        # Window size (height defined by camera ratio)
-        self.win_width = 1152
 
         # Fonts
         self.font_size = 10
@@ -43,23 +40,35 @@ class AsciiVideo:
             sys.exit("No camera detected")
 
         # Get camera resolution and frame rate to define pixels needed
-        img_width = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
-        img_height = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        img_ratio = img_width / img_height
-        self.win_height = int(self.win_width / img_ratio)
+        self.img_width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.img_height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        img_ratio = self.img_width / self.img_height
         self.frame_rate = self.capture.get(cv2.CAP_PROP_FPS)
-
-        # If image ratio wider than 4:3, crop to 4:3
-        if img_ratio > 4 / 3:
-            img_adjustment = int(img_width * 3 / 4)
-            self.crop_width = int((img_width - img_adjustment) / 2)
-            self.win_width = int(self.win_width * 3 / 4)
 
         # Setup Pygame
         pygame.init()
-        self.clock = pygame.time.Clock()
+
+        # Get monitor width & height
+        monitor_width, monitor_height = pygame.display.get_desktop_sizes()[0]
+        
+        # Define window height to be 60% of main monitor size
+        self.win_height = int(monitor_height * 0.6)
+
+        # Define window width based on image resolution
+        # If image ratio is wider than 4:3, crop to 4:3
+        if img_ratio > 4 / 3:
+            img_ratio = 4 / 3
+        self.win_width = int(self.win_height * img_ratio)
+        
+        # Set window size in pygame
         self.screen = pygame.display.set_mode((self.win_width, self.win_height))
+
+        # Define how to crop image to fit window size
+        img_adjustment = int(self.img_width / img_ratio)
+        self.crop_width = int((self.img_width - img_adjustment) / 2)
+        
         pygame.display.set_caption('Ascii Art')
+        self.clock = pygame.time.Clock()
         self._create_font_object()
         self._calc_pixel_size()
 
@@ -94,9 +103,8 @@ class AsciiVideo:
         # Convert to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Crop to 4:3
-        # print(self.crop_width, self.win_width, self.win_height)
-        cropped = gray[0:1080, 240:1680]
+        # Crop horizontal size to match window ratio
+        cropped = gray[:, self.crop_width:self.img_width - self.crop_width]
 
         # Reduce pixels for processing
         small = cv2.resize(cropped, (self.h_chars, self.v_chars),
@@ -150,6 +158,7 @@ class AsciiVideo:
         elif event.key == pygame.K_d:
             self.debug.status = True
 
+
     def check_keyup_events(self, event):
         if event.key == pygame.K_d:
             self.debug.status = False
@@ -190,6 +199,7 @@ class AsciiVideo:
 
         # 8-bit (256) greyscale range to ascii range conversion factor
         self.division_factor = 256 / len(self.ascii_reverse)
+
 
     def render_text(self, text):
         rendered_text = self.font.render(text, False, self.WHITE)
