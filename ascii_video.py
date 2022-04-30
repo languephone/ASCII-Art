@@ -4,7 +4,8 @@ import sys
 from ascii_debug import AsciiDebug
 
 # TODO: Calculate crop area dynamically
-# TODO: Deal with gap in text rows
+# TODO: Ensure window isn't larger than display size
+# TODO: Deal with gap in text rows dynamically
 # TODO: Display instructions on screen
 
 class AsciiVideo:
@@ -13,12 +14,13 @@ class AsciiVideo:
     def __init__(self):
         """Define variables and initialize the program."""
         
-        # Window size
+        # Window size (height defined by camera ratio)
         self.win_width = 1152
 
         # Fonts
         self.font_size = 10
         self.font_name = 'couriernew'
+        # Adjustment to deal with blank space at top & bottom of characters
         self.line_height_adjustment = 4
 
         # Colours
@@ -43,9 +45,15 @@ class AsciiVideo:
         # Get camera resolution and frame rate to define pixels needed
         img_width = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
         img_height = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        img_ratio = img_height / img_width
-        self.win_height = int(self.win_width * img_ratio)
+        img_ratio = img_width / img_height
+        self.win_height = int(self.win_width / img_ratio)
         self.frame_rate = self.capture.get(cv2.CAP_PROP_FPS)
+
+        # If image ratio wider than 4:3, crop to 4:3
+        if img_ratio > 4 / 3:
+            img_adjustment = int(img_width * 3 / 4)
+            self.crop_width = int((img_width - img_adjustment) / 2)
+            self.win_width = int(self.win_width * 3 / 4)
 
         # Setup Pygame
         pygame.init()
@@ -68,7 +76,7 @@ class AsciiVideo:
         """Use window size and font size to calculate chars needed."""
         
         # Calculate size in pixels of chars based on font
-        line_width, self.line_height  = self.font.size('#' * 20)
+        line_width, self.line_height = self.font.size('#' * 20)
         self.line_height -= self.line_height_adjustment
         self.char_width = line_width / 20
         # To test line hight, use chr(9608), which is a full height character
@@ -85,9 +93,15 @@ class AsciiVideo:
     def _resize_image(self, image):
         # Convert to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Crop to 4:3
+        # print(self.crop_width, self.win_width, self.win_height)
+        cropped = gray[0:1080, 240:1680]
+
         # Reduce pixels for processing
-        small = cv2.resize(gray, (self.h_chars, self.v_chars),
+        small = cv2.resize(cropped, (self.h_chars, self.v_chars),
                             interpolation = cv2.INTER_AREA)
+
         # Mirror reverse
         flipped = cv2.flip(small, 1)
 
