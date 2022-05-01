@@ -2,7 +2,7 @@ import cv2
 import pygame
 import sys
 from ascii_debug import AsciiDebug
-from interface import Interface
+from interface import Instructions, Interface
 
 # TODO: Deal with gap in text rows dynamically
 # TODO: Display instructions on screen
@@ -61,7 +61,7 @@ class AsciiVideo:
         
         # Set window size in pygame, with 200 px for the interface
         self.screen = pygame.display.set_mode(
-            (self.win_width + 200, self.win_height))
+            (self.win_width + 300, self.win_height))
 
         # Define how to crop image to fit window size
         img_adjustment = int(self.img_width / img_ratio)
@@ -74,6 +74,7 @@ class AsciiVideo:
 
         # Create program objects
         self.debug = AsciiDebug(self)
+        self.instructions = Instructions(self)
         self.interface = Interface(self)
 
 
@@ -222,7 +223,8 @@ class AsciiVideo:
             self.screen.fill(self.BLACK)
 
             # Display interface
-            self.interface.draw_interface()
+            self.instructions.draw_instructions()
+            self.interface.draw_separation_lines()
             
             for index, row in enumerate(flipped):
                 
