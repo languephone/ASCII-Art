@@ -23,6 +23,8 @@ class Interface:
 		self.interface_images = [self.prep_text(text) for text
 			in interface_list]
 
+		self.text_distance = av_object.win_height / len(interface_list)
+
 
 	def prep_text(self, text):
 		"""Turn the text into a rendered image for display."""
@@ -37,4 +39,4 @@ class Interface:
 
 		for index, image in enumerate(self.interface_images):
 			self.av_object.screen.blit(image,
-				(self.av_object.win_width + 5, 150 * index))
+				(self.av_object.win_width + 5, self.text_distance * index))
