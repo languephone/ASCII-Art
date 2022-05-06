@@ -11,26 +11,12 @@ class Instructions:
 		self.v_pos = v_pos
 
 		self.win_width = av_object.win_width
-		# self.win_height = av_object.win_height
 
 		# Font settings for scoring information.
 		self.text_color = (255, 255, 255)
 		self.font = pygame.font.SysFont('helveticaneue', 18)
 
-		# font_size_text = "Change font size"
-		# contrast_text = "Change contrast."
-		# ascii_set_text = "Cycle between character sets"
-		# debug_text = "Hold to enable debug mode."
-
-		# instruction_list = [font_size_text, contrast_text, ascii_set_text,
-		# 	debug_text]
-
-		# self.instruction_images = [self.prep_text(text) for text
-		# 	in instruction_list]
-
-		# self.text_distance = self.win_height / len(instruction_list)
-
-		# Changing this class to create only a single image
+		# Create image from text
 		self.instruction_image = self.prep_text(self.msg)
 
 
@@ -45,10 +31,6 @@ class Instructions:
 	def draw_instructions(self):
 		"""Turn the text into a rendered image for display."""
 
-		# for index, image in enumerate(self.instruction_images):
-		# 	self.av_object.screen.blit(image,
-		# 		(self.win_width + 5, self.text_distance * self.index))
-
 		self.av_object.screen.blit(self.instruction_image,
 			(self.win_width + 5, self.v_pos))
 
@@ -62,20 +44,7 @@ class Separator:
 		self.av_object = av_object
 		self.win_width = av_object.win_width
 		self.v_pos = v_pos
-		# self.win_height = av_object.win_height
 
-		# self.instructions = Instructions(av_object)
-		# self.text_distance = self.win_height / len(
-		# 	self.instructions.instruction_images)
-
-	# def draw_separation_lines(self):
-
-	# 	for index, image in enumerate(self.instructions.instruction_images):
-
-	# 		# Draw a separation line
-	# 		pygame.draw.line(self.av_object.screen, (100, 100, 100),
-	# 			start_pos=(self.win_width + 5, self.text_distance * index + 23),
-	# 			end_pos=(self.win_width + 275, self.text_distance * index + 23))
 
 	def draw_single_line(self):
 
@@ -116,7 +85,7 @@ class Button:
 
 	def draw_button(self):
 		"""Draw a blank button and then draw message."""
-		# self.av_object.screen.fill(self.button_color, self.rect)
+
 		pygame.draw.rect(self.av_object.screen, self.button_color, self.rect,
 			border_radius=4)
 		self.av_object.screen.blit(self.msg_img, self.msg_img_rect)

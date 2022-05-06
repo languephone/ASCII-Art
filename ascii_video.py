@@ -74,12 +74,6 @@ class AsciiVideo:
 
         # Create program objects
         self.debug = AsciiDebug(self)
-        # self.instructions = Instructions(self)
-        # self.separator = Separator(self)
-        # self.ascii_decrease_font = Button(self, 'Decrease Font',
-        #     self.win_width + 5, 27)
-        # self.ascii_increase_font = Button(self, 'Increase Font',
-        #     self.win_width + self.ascii_decrease_font.width + 10, 27)
         self.ui_elements = UiElement(self)
 
     def _create_font_object(self):
@@ -233,10 +227,6 @@ class AsciiVideo:
                 separator.draw_single_line()
             for button in self.ui_elements.buttons:
                 button.draw_button()
-            # self.instructions.draw_instructions()
-            # self.separator.draw_separation_lines()
-            # self.ascii_decrease_font.draw_button()
-            # self.ascii_increase_font.draw_button()
             
             for index, row in enumerate(flipped):
                 
@@ -251,7 +241,6 @@ class AsciiVideo:
 
                 # increment y position of each text row by the line height of the font
                 self.screen.blit(rendered_text, (0, index * self.line_height))
-
 
             pygame.display.flip()
             self.clock.tick(self.frame_rate)
