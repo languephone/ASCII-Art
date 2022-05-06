@@ -49,7 +49,9 @@ class Instructions:
 		# 	self.av_object.screen.blit(image,
 		# 		(self.win_width + 5, self.text_distance * self.index))
 
-		self.av_object.screen.blit(image, (self.win_width + 5, self.v_pos))
+		self.av_object.screen.blit(self.instruction_image,
+			(self.win_width + 5, self.v_pos))
+
 
 class Separator:
 	"""A class to show decorative UI elements."""
@@ -59,6 +61,7 @@ class Separator:
 
 		self.av_object = av_object
 		self.win_width = av_object.win_width
+		self.v_pos = v_pos
 		# self.win_height = av_object.win_height
 
 		# self.instructions = Instructions(av_object)
@@ -74,11 +77,11 @@ class Separator:
 	# 			start_pos=(self.win_width + 5, self.text_distance * index + 23),
 	# 			end_pos=(self.win_width + 275, self.text_distance * index + 23))
 
-	def draw_single_line(self, index):
+	def draw_single_line(self):
 
 		pygame.draw.line(self.av_object.screen, (100, 100, 100),
-			start_pos=(self.win_width + 5, v_pos + 23),
-			end_pos=(self.win_width + 275, v_pos + 23))
+			start_pos=(self.win_width + 5, self.v_pos + 23),
+			end_pos=(self.win_width + 275, self.v_pos + 23))
 
 
 class Button:
@@ -87,16 +90,17 @@ class Button:
 	def __init__(self, av_object, msg, h_index, v_pos):
 		"""Initialize button attributes."""
 		self.av_object = av_object
-		self.h_pos = h_index * (self.av_object.win_width + 5)
-
+		
 		# Set the dimensions and properties of the button.
 		self.width, self.height = 100, 30
 		self.button_color = (100, 100, 100)
 		self.text_color = (200, 200, 200)
 		self.font = pygame.font.SysFont('helveticaneue', 12)
 
+		self.h_pos = self.av_object.win_width + (self.width * h_index) + (5 * h_index) + 5
+
 		# Build the button's rect object and center it.
-		self.rect = pygame.Rect(self.h_pos, v_pos, self.width, self.height)
+		self.rect = pygame.Rect(self.h_pos, v_pos + 30, self.width, self.height)
 
 		# Prep the button message.
 		self._prep_msg(msg)
@@ -129,23 +133,30 @@ class UiElement:
 		self.elements = [
 			{'text': 'Change font size',
 				'buttons': ['Decrease Font', 'Increase Font']},
-			{'text': 'Change contrast.',
+			{'text': 'Change contrast',
 				'buttons': ['Decrease Contrast', 'Increase Contrast']},
 			{'text': 'Cycle between character sets',
 				'buttons': ['Previous Set', 'Next Set']},
 			{'text': 'Hold to enable debug mode', 'buttons': ['Debug']}
 		]
 
+		# Define vertical position of each element based on number of elements
 		self.v_spacing = self.av_object.win_height / len(self.elements)
 
-		# Generate all required UI objects and put into a list
-		self.ui_elements = []
-		for index, element in enumerate(self.elements):
-			segment = self.create_ui_element(element['text'],
-				element['buttons'], index)
-			self.ui_elements.append(segment)		
+		# Generate all required UI objects and put into lists
+		self.instructions = []
+		self.separators = []
+		self.buttons = []
 
-		print(self.ui_elements)
+		for index, element in enumerate(self.elements):
+			
+			instruction, separator, button_list = self.create_ui_element(
+				element['text'], element['buttons'], index)
+			
+			self.instructions.append(instruction)
+			self.separators.append(separator)
+			for button in button_list:
+				self.buttons.append(button)
 
 
 	def create_ui_element(self, inst_msg, buttons, index):

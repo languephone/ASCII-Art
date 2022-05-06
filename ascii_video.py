@@ -227,6 +227,12 @@ class AsciiVideo:
             self.screen.fill(self.BLACK)
 
             # Display UI
+            for instruction in self.ui_elements.instructions:
+                instruction.draw_instructions()
+            for separator in self.ui_elements.separators:
+                separator.draw_single_line()
+            for button in self.ui_elements.buttons:
+                button.draw_button()
             # self.instructions.draw_instructions()
             # self.separator.draw_separation_lines()
             # self.ascii_decrease_font.draw_button()
