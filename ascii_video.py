@@ -5,7 +5,7 @@ from ascii_debug import AsciiDebug
 from interface import Instructions, Separator, Button, UiElement
 
 # TODO: Deal with gap in text rows dynamically
-# TODO: Display instructions on screen
+# TODO: Make UI buttons interactive
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
@@ -46,6 +46,8 @@ class AsciiVideo:
 
         # Setup Pygame
         pygame.init()
+        pygame.display.set_caption('Ascii Art')
+        self.clock = pygame.time.Clock()
 
         # Get monitor width & height
         monitor_width, monitor_height = pygame.display.get_desktop_sizes()[0]
@@ -58,23 +60,21 @@ class AsciiVideo:
         if img_ratio > 4 / 3:
             img_ratio = 4 / 3
         self.win_width = int(self.win_height * img_ratio)
-        
-        # Set window size in pygame, with 200 px for the interface
+
+        # Set window size in pygame, with 300 px for the UI
         self.screen = pygame.display.set_mode(
             (self.win_width + 300, self.win_height))
 
         # Define how to crop image to fit window size
         img_adjustment = int(self.img_width / img_ratio)
         self.crop_width = int((self.img_width - img_adjustment) / 2)
-        
-        pygame.display.set_caption('Ascii Art')
-        self.clock = pygame.time.Clock()
-        self._create_font_object()
-        self._calc_pixel_size()
 
         # Create program objects
+        self._create_font_object()
+        self._calc_pixel_size()
         self.debug = AsciiDebug(self)
         self.ui_elements = UiElement(self)
+
 
     def _create_font_object(self):
         """Generate pypgame font object used to render text on screen."""
@@ -117,8 +117,8 @@ class AsciiVideo:
 
 
     def convert_to_ascii(self, image_row):
-        row_text = (''.join([self.ascii_reverse[int(pixel / self.division_factor)]
-                                for pixel in image_row]))
+        row_text = (''.join([self.ascii_reverse[int(pixel / 
+            self.division_factor)] for pixel in image_row]))
 
         return row_text
 
@@ -186,6 +186,7 @@ class AsciiVideo:
 
 
     def set_ascii_range(self, increment):
+        """Reset characteristics based on different character sets."""
         
         # Increment range by one
         self.ascii_set += increment
