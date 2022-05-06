@@ -2,7 +2,7 @@ import cv2
 import pygame
 import sys
 from ascii_debug import AsciiDebug
-from interface import Instructions, Interface, Button
+from interface import Instructions, Separator, Button, UiElement
 
 # TODO: Deal with gap in text rows dynamically
 # TODO: Display instructions on screen
@@ -74,11 +74,13 @@ class AsciiVideo:
 
         # Create program objects
         self.debug = AsciiDebug(self)
-        self.instructions = Instructions(self)
-        self.interface = Interface(self)
-        self.ascii_set_toggle = Button(self, 'toggle font', self.win_width + 5,
-            27)
-
+        # self.instructions = Instructions(self)
+        # self.separator = Separator(self)
+        # self.ascii_decrease_font = Button(self, 'Decrease Font',
+        #     self.win_width + 5, 27)
+        # self.ascii_increase_font = Button(self, 'Increase Font',
+        #     self.win_width + self.ascii_decrease_font.width + 10, 27)
+        self.ui_elements = UiElement(self)
 
     def _create_font_object(self):
         """Generate pypgame font object used to render text on screen."""
@@ -224,10 +226,11 @@ class AsciiVideo:
             # Fill screen with black on each frame to overwrite previous frame
             self.screen.fill(self.BLACK)
 
-            # Display interface
-            self.instructions.draw_instructions()
-            self.interface.draw_separation_lines()
-            self.ascii_set_toggle.draw_button()
+            # Display UI
+            # self.instructions.draw_instructions()
+            # self.separator.draw_separation_lines()
+            # self.ascii_decrease_font.draw_button()
+            # self.ascii_increase_font.draw_button()
             
             for index, row in enumerate(flipped):
                 
