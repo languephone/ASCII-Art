@@ -135,9 +135,13 @@ class AsciiVideo:
                 self.check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self.check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self.check_button_events(mouse_pos)
 
 
     def check_keydown_events(self, event):
+        """Respond to keypresses."""
         if event.key == pygame.K_UP:
             if len(self.ascii_reverse) > len(self.ascii_sets[self.ascii_set]):
                 self.change_contrast(-1)
@@ -160,8 +164,16 @@ class AsciiVideo:
 
 
     def check_keyup_events(self, event):
+        """Respond to key releases."""
         if event.key == pygame.K_d:
             self.debug.status = False
+
+
+    def check_button_events(self, mouse_pos):
+        """Respond to mouse buttons"""
+        for button in self.ui_elements.buttons:
+            if button.rect.collidepoint(mouse_pos):
+                print(button)
 
 
     def change_font_size(self, factor):
