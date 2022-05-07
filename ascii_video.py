@@ -138,6 +138,9 @@ class AsciiVideo:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self.check_button_events(mouse_pos)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                # Debug only enabled when holding mouse down
+                self.debug.status = False
 
 
     def check_keydown_events(self, event):
@@ -166,7 +169,20 @@ class AsciiVideo:
         """Respond to mouse buttons"""
         for button in self.ui_elements.buttons:
             if button.rect.collidepoint(mouse_pos):
-                print(button.msg)
+                if button.msg == 'Decrease Font':
+                    self.change_font_size(-1)
+                if button.msg == 'Increase Font':
+                    self.change_font_size(1)
+                if button.msg == 'Decrease Contrast':
+                    self.change_contrast(-1)
+                if button.msg == 'Increase Contrast':
+                    self.change_contrast(1)
+                if button.msg == 'Previous Set':
+                    self.set_ascii_range(1)
+                if button.msg == 'Next Set':
+                    self.set_ascii_range(-1)
+                if button.msg == 'Debug':
+                    self.debug.status = True
 
 
     def change_font_size(self, factor):

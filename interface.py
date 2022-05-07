@@ -58,6 +58,7 @@ class Button:
     def __init__(self, av_object, msg, h_index, v_pos):
         """Initialize button attributes."""
         self.av_object = av_object
+        self.msg = msg
 
         # Set the dimensions and properties of the button.
         self.width, self.height = 100, 30
