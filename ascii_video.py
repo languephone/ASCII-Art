@@ -143,20 +143,13 @@ class AsciiVideo:
     def check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_UP:
-            if len(self.ascii_reverse) > len(self.ascii_sets[self.ascii_set]):
-                self.change_contrast(-1)
+            self.change_contrast(-1)
         elif event.key == pygame.K_DOWN:
-            if len(self.ascii_reverse) < len(
-                    self.ascii_sets[self.ascii_set]) + 10:
-                self.change_contrast(1)
+            self.change_contrast(1)
         elif event.key == pygame.K_LEFT:
-            # Limit min size to 7
-            if self.font_size > 7:
-                self.change_font_size(-1)
+            self.change_font_size(-1)
         elif event.key == pygame.K_RIGHT:
-            # Limit max size to 22
-            if self.font_size < 22:
-                self.change_font_size(1)
+            self.change_font_size(1)
         elif event.key == pygame.K_a:
             self.set_ascii_range(1)
         elif event.key == pygame.K_d:
@@ -173,26 +166,31 @@ class AsciiVideo:
         """Respond to mouse buttons"""
         for button in self.ui_elements.buttons:
             if button.rect.collidepoint(mouse_pos):
-                print(button)
+                print(button.msg)
 
 
     def change_font_size(self, factor):
         """Update font size and re-calc char sizes."""
-
-        self.font_size += factor
-        self._create_font_object()
-        self._calc_pixel_size()
+        # Limit font size range to between 7pt and 22pt
+        if self.font_size > 7 and factor < 0\
+            or self.font_size < 22 and factor > 0:
+            self.font_size += factor
+            self._create_font_object()
+            self._calc_pixel_size()
 
 
     def change_contrast(self, factor):
-
-        # Use spaces on the end of the 
+        """Increase or decrease trailing spaces in ASCII char set."""
+        # Limit addition/removal of space characters
         if factor < 0:
-            self.ascii_reverse.pop(0)
-            self.division_factor = 256 / len(self.ascii_reverse)
+            if len(self.ascii_reverse) > len(self.ascii_sets[self.ascii_set]):
+                self.ascii_reverse.pop(0)
+                self.division_factor = 256 / len(self.ascii_reverse)
         elif factor > 0:
-            self.ascii_reverse.insert(0, ' ')
-            self.division_factor = 256 / len(self.ascii_reverse)
+            if len(self.ascii_reverse) < len(
+                    self.ascii_sets[self.ascii_set]) + 10:
+                self.ascii_reverse.insert(0, ' ')
+                self.division_factor = 256 / len(self.ascii_reverse)
 
         print(f'New Contrast: {len(self.ascii_reverse)}')
 
