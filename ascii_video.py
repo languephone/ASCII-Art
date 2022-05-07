@@ -66,7 +66,7 @@ class AsciiVideo:
             (self.win_width + 300, self.win_height))
 
         # Define how to crop image to fit window size
-        img_adjustment = int(self.img_width / img_ratio)
+        img_adjustment = int(self.img_height * img_ratio)
         self.crop_width = int((self.img_width - img_adjustment) / 2)
 
         # Create program objects
