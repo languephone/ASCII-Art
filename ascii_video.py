@@ -5,7 +5,7 @@ from ascii_debug import AsciiDebug
 from interface import Instructions, Separator, Button, UiElement, FramesPerSecond
 
 # TODO: Deal with gap in text rows dynamically
-# TODO: Make UI buttons interactive
+# TODO: Change UI button colours when pressed
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
@@ -20,7 +20,7 @@ class AsciiVideo:
         self.line_height_adjustment = 4
 
         # Colours
-        self.BLACK = (0, 0, 0)
+        self.BLACK = (25, 25, 25)
         self.WHITE = (255, 255, 255) 
         
         # Ascii characters
@@ -142,6 +142,10 @@ class AsciiVideo:
             elif event.type == pygame.MOUSEBUTTONUP:
                 # Debug only enabled when holding mouse down
                 self.debug.status = False
+                # Revert colour of buttons back to normal
+                for button in self.ui_elements.buttons:
+                    button.button_color = (100, 100, 100)
+                    button._prep_msg()
 
 
     def check_keydown_events(self, event):
@@ -170,6 +174,9 @@ class AsciiVideo:
         """Respond to mouse buttons"""
         for button in self.ui_elements.buttons:
             if button.rect.collidepoint(mouse_pos):
+                # Change colour of button
+                button.button_color = (150, 150, 150)
+                button._prep_msg()
                 if button.msg == 'Decrease Font':
                     self.change_font_size(-1)
                 if button.msg == 'Increase Font':
