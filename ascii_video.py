@@ -57,8 +57,8 @@ class AsciiVideo:
 
         # Define window width based on image resolution
         # If image ratio is wider than 4:3, crop to 4:3
-        if img_ratio > 4 / 3:
-            img_ratio = 4 / 3
+        if img_ratio > 3 / 3:
+            img_ratio = 3 / 3
         self.win_width = int(self.win_height * img_ratio)
 
         # Set window size in pygame, with 300 px for the UI
