@@ -2,7 +2,7 @@ import cv2
 import pygame
 import sys
 from ascii_debug import AsciiDebug
-from interface import Instructions, Separator, Button, UiElement
+from interface import Instructions, Separator, Button, UiElement, FramesPerSecond
 
 # TODO: Deal with gap in text rows dynamically
 # TODO: Make UI buttons interactive
@@ -74,6 +74,7 @@ class AsciiVideo:
         self._calc_pixel_size()
         self.debug = AsciiDebug(self)
         self.ui_elements = UiElement(self)
+        self.fps = FramesPerSecond(self)
 
 
     def _create_font_object(self):
@@ -254,7 +255,9 @@ class AsciiVideo:
                 separator.draw_single_line()
             for button in self.ui_elements.buttons:
                 button.draw_button()
+            self.fps.display_fps()
             
+            # Display ASCII text
             for index, row in enumerate(flipped):
                 
                 if self.debug.status:
