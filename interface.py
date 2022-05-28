@@ -141,8 +141,7 @@ class UiElement:
 
             self.instructions.append(instruction)
             self.separators.append(separator)
-            for button in button_list:
-                self.buttons.append(button)
+            self.buttons.extend(button_list)
 
 
     def create_ui_element(self, inst_msg, buttons, index):

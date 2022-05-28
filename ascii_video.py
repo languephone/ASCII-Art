@@ -5,7 +5,6 @@ from ascii_debug import AsciiDebug
 from interface import Instructions, Separator, Button, UiElement, FramesPerSecond
 
 # TODO: Deal with gap in text rows dynamically
-# TODO: Change UI button colours when pressed
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
