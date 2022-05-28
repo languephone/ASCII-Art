@@ -1,7 +1,5 @@
 # ASCII Webcam
 
-## View yourself as live ASCII art
-
 Using your computer's in-built or attached camera, this program turns your camera feed into a live ASCII art rendering.
 
 ## Technologies Used
