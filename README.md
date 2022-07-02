@@ -1,6 +1,6 @@
 # ASCII Webcam
 
-Converts a live video feed from a built-in or connected camera into ASCII art. On-screen UI options allow for the use of different ASII character sets, changes to the font size, and changes to the contrast ratio.
+Converts a live video feed from a built-in or connected camera into ASCII art. On-screen UI options allow for the use of different ASCII character sets, changes to the font size, and changes to the contrast ratio.
 
 ## Technologies Used
 - Python
