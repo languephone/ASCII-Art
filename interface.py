@@ -123,6 +123,7 @@ class UiElement:
                 'buttons': ['Decrease Contrast', 'Increase Contrast']},
             {'text': 'Cycle between character sets',
                 'buttons': ['Previous Set', 'Next Set']},
+            {'text': 'Take screen shot', 'buttons': ['Screen Shot']},
             {'text': 'Hold to enable debug mode', 'buttons': ['Debug']}
         ]
 

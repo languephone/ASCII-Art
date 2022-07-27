@@ -188,6 +188,8 @@ class AsciiVideo:
                     self.set_ascii_range(1)
                 if button.msg == 'Next Set':
                     self.set_ascii_range(-1)
+                if button.msg == 'Screen Shot':
+                    self.save_screen_image()
                 if button.msg == 'Debug':
                     self.debug.status = True
 
@@ -233,6 +235,15 @@ class AsciiVideo:
 
         # 8-bit (256) greyscale range to ascii range conversion factor
         self.division_factor = 256 / len(self.ascii_reverse)
+
+
+    def save_screen_image(self):
+        with open('saved_images/screen_shot.txt', 'w') as f:
+            ret, frame = self.capture.read()
+            flipped = self._resize_image(frame)
+
+            for row in flipped:
+                f.write(self.convert_to_ascii(row) + '\n')
 
 
     def render_text(self, text):
