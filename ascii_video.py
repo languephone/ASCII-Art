@@ -237,13 +237,17 @@ class AsciiVideo:
         self.division_factor = 256 / len(self.ascii_reverse)
 
 
-    def save_screen_image(self):
+    def save_screen_text(self):
         with open('saved_images/screen_shot.txt', 'w') as f:
             ret, frame = self.capture.read()
             flipped = self._resize_image(frame)
 
             for row in flipped:
                 f.write(self.convert_to_ascii(row) + '\n')
+
+
+    def save_screen_image(self):
+        pygame.image.save(self.screen, 'saved_images/screenshot.png')
 
 
     def render_text(self, text):
