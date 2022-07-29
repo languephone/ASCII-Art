@@ -188,8 +188,10 @@ class AsciiVideo:
                     self.set_ascii_range(1)
                 if button.msg == 'Next Set':
                     self.set_ascii_range(-1)
-                if button.msg == 'Screen Shot':
+                if button.msg == 'Whole Window':
                     self.save_screen_image()
+                if button.msg == 'Image Only':
+                    self.save_screen_portion()
                 if button.msg == 'Debug':
                     self.debug.status = True
 
@@ -247,7 +249,17 @@ class AsciiVideo:
 
 
     def save_screen_image(self):
+        """Save image file of entire pygame screen."""
         pygame.image.save(self.screen, 'saved_images/screenshot.png')
+        # TODO: Show dialog box confirming screen grab.
+        # TODO: Prevent saving over previous screen grabs.
+
+
+    def save_screen_portion(self):
+        """Save image file of video portion of pygame screen."""
+        portion = self.screen.subsurface(0, 0, self.win_width,
+            self.win_height)
+        pygame.image.save(portion, 'saved_images/screenshot.png')
 
 
     def render_text(self, text):
