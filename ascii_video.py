@@ -2,7 +2,7 @@ import cv2
 import pygame
 import sys
 from ascii_debug import AsciiDebug
-from interface import Instructions, Separator, Button, UiElement, FramesPerSecond
+from interface import Instructions, Separator, Button, UiElement, FramesPerSecond, DialogueBox
 
 # TODO: Deal with gap in text rows dynamically
 
@@ -73,6 +73,7 @@ class AsciiVideo:
         self._calc_pixel_size()
         self.debug = AsciiDebug(self)
         self.ui_elements = UiElement(self)
+        self.screenshot_confirm = DialogueBox(self, "Screenshot Saved")
         self.fps = FramesPerSecond(self)
 
 
@@ -289,7 +290,7 @@ class AsciiVideo:
             for button in self.ui_elements.buttons:
                 button.draw_button()
             self.fps.display_fps()
-            
+
             # Display ASCII text
             for index, row in enumerate(flipped):
                 
@@ -304,6 +305,9 @@ class AsciiVideo:
 
                 # increment y position of each text row by the line height of the font
                 self.screen.blit(rendered_text, (0, index * self.line_height))
+
+            # Display dialogue boxes
+            self.screenshot_confirm.draw_dialogue()
 
             pygame.display.flip()
             self.clock.tick(self.frame_rate)

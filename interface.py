@@ -91,6 +91,50 @@ class Button:
         self.av_object.screen.blit(self.msg_img, self.msg_img_rect)
 
 
+class DialogueBox:
+    """A class to display messages to the user."""
+    def __init__(self, av_object, msg):
+        """Initialize dialog box attributes."""
+        self.av_object = av_object
+        self.msg = msg
+
+        # Set the dimensions and properties of the box.
+        self.width = int(self.av_object.win_width * 0.7)
+        self.height = int(self.av_object.win_height * 0.2)
+        self.button_color = (100, 100, 100)
+        self.text_color = (255, 255, 255)
+        self.font = pygame.font.SysFont('helveticaneue', 40)
+        self.h_pos = int(self.av_object.win_width * 0.15)
+        self.v_pos = int(self.av_object.win_height * 0.3)
+
+        # Build the button's rect object and center it.
+        self.rect = pygame.Rect(0, 0, self.width, self.height)
+
+        self._prep_msg()
+        self._create_transparent_surface()
+
+    def _prep_msg(self):
+        """Turn msg into rendered image and center text on button."""
+        self.msg_img = self.font.render(self.msg, True, self.text_color,
+                                        self.button_color)
+        self.msg_img_rect = self.msg_img.get_rect()
+        self.msg_img_rect.center = self.rect.center
+
+    def _create_transparent_surface(self):
+        """Create transparant surfact to place box and text."""
+        self.trans_surf = pygame.Surface((self.width, self.height))
+        self.trans_surf.set_alpha(230) # 0-255 scale 
+        # Draw gray rectangle onto transparent surface
+        pygame.draw.rect(self.trans_surf, self.button_color, self.rect,
+            border_radius=4)
+        # Blit message onto transparent surface
+        self.trans_surf.blit(self.msg_img, self.msg_img_rect)
+
+    def draw_dialogue(self):
+        """Blit transparent surface onto display surface."""
+        self.av_object.screen.blit(self.trans_surf, (self.h_pos, self.v_pos))
+
+
 class FramesPerSecond:
     """A class to manage the fps display."""
     def __init__(self, av_object):
@@ -99,6 +143,7 @@ class FramesPerSecond:
         self.av_object = av_object
         self.font = pygame.font.SysFont('helveticaneue', 18)
         self.text_color = (0, 255, 0)
+
 
     def display_fps(self):
 
