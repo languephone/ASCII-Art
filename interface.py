@@ -13,7 +13,7 @@ class Instructions:
 
         # Font settings for instructions.
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.SysFont('helveticaneue', 18)
+        self.font = pygame.font.SysFont('helveticaneue', 12)
         self.background_color = av_object.BLACK
 
         # Create image from text
@@ -63,10 +63,10 @@ class Button:
         self.msg = msg
 
         # Set the dimensions and properties of the button.
-        self.width, self.height = 100, 25
+        self.width, self.height = 70, 15
         self.button_color = (100, 100, 100)
         self.text_color = (200, 200, 200)
-        self.font = pygame.font.SysFont('helveticaneue', 12)
+        self.font = pygame.font.SysFont('helveticaneue', 8)
 
         # Start button at edge of display window, then indent by 5, with 5px
         # space between each button

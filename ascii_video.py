@@ -48,7 +48,7 @@ class AsciiVideo:
         monitor_width, monitor_height = pygame.display.get_desktop_sizes()[0]
         
         # Define window height to be 60% of main monitor size
-        self.win_height = int(monitor_height * 0.6)
+        self.win_height = int(monitor_height * 0.3)
 
         # Define window width based on image resolution
         # If image ratio is wider than 4:3, crop to 4:3
@@ -58,7 +58,7 @@ class AsciiVideo:
 
         # Set window size in pygame, with 300 px for the UI
         self.screen = pygame.display.set_mode(
-            (self.win_width + 300, self.win_height))
+            (self.win_width + 200, self.win_height))
 
         # Define how to crop image to fit window size
         img_adjustment = int(self.camera.img_height * self.camera.img_ratio)
