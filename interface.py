@@ -106,7 +106,7 @@ class DialogueBox:
         self.height = int(self.av_object.win_height * 0.2)
         self.button_color = (100, 100, 100)
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.SysFont('helveticaneue', 40)
+        self.font = pygame.font.SysFont('helveticaneue', 24)
         self.h_pos = int(self.av_object.win_width * 0.15)
         self.v_pos = int(self.av_object.win_height * 0.3)
 
