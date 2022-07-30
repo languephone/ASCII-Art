@@ -252,6 +252,7 @@ class AsciiVideo:
     def save_screen_image(self):
         """Save image file of entire pygame screen."""
         pygame.image.save(self.screen, 'saved_images/screenshot.png')
+        self.screenshot_confirm.time_left = self.screenshot_confirm.display_time
         # TODO: Show dialog box confirming screen grab.
         # TODO: Prevent saving over previous screen grabs.
 
@@ -261,6 +262,7 @@ class AsciiVideo:
         portion = self.screen.subsurface(0, 0, self.win_width,
             self.win_height)
         pygame.image.save(portion, 'saved_images/screenshot.png')
+        self.screenshot_confirm.time_left = self.screenshot_confirm.display_time
 
 
     def render_text(self, text):
@@ -307,7 +309,9 @@ class AsciiVideo:
                 self.screen.blit(rendered_text, (0, index * self.line_height))
 
             # Display dialogue boxes
-            self.screenshot_confirm.draw_dialogue()
+            if self.screenshot_confirm.time_left > 0:
+                self.screenshot_confirm.draw_dialogue()
+                self.screenshot_confirm.time_left -= 1
 
             pygame.display.flip()
             self.clock.tick(self.frame_rate)

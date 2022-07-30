@@ -107,6 +107,10 @@ class DialogueBox:
         self.h_pos = int(self.av_object.win_width * 0.15)
         self.v_pos = int(self.av_object.win_height * 0.3)
 
+        # Flag to determine if shown on screen
+        self.display_time = 30 # frames
+        self.time_left = 0
+
         # Build the button's rect object and center it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
 
@@ -123,7 +127,7 @@ class DialogueBox:
     def _create_transparent_surface(self):
         """Create transparant surfact to place box and text."""
         self.trans_surf = pygame.Surface((self.width, self.height))
-        self.trans_surf.set_alpha(230) # 0-255 scale 
+        self.trans_surf.set_alpha(230) # 0-255 scale
         # Draw gray rectangle onto transparent surface
         pygame.draw.rect(self.trans_surf, self.button_color, self.rect,
             border_radius=4)
