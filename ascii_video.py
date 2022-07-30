@@ -1,6 +1,7 @@
 import cv2
 import pygame
 import sys
+import os
 from ascii_debug import AsciiDebug
 from interface import Instructions, Separator, Button, UiElement, FramesPerSecond, DialogueBox
 
@@ -251,6 +252,8 @@ class AsciiVideo:
 
     def save_screen_image(self):
         """Save image file of entire pygame screen."""
+        if not os.path.exists('saved_images'):
+            os.mkdir('saved_images')
         pygame.image.save(self.screen, 'saved_images/screenshot.png')
         self.screenshot_confirm.set_display_time()
         # TODO: Prevent saving over previous screen grabs.
@@ -258,6 +261,8 @@ class AsciiVideo:
 
     def save_screen_portion(self):
         """Save image file of video portion of pygame screen."""
+        if not os.path.exists('saved_images'):
+            os.mkdir('saved_images')
         portion = self.screen.subsurface(0, 0, self.win_width,
             self.win_height)
         pygame.image.save(portion, 'saved_images/screenshot.png')
