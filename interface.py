@@ -107,8 +107,8 @@ class DialogueBox:
         self.h_pos = int(self.av_object.win_width * 0.15)
         self.v_pos = int(self.av_object.win_height * 0.3)
 
-        # Flag to determine if shown on screen
-        self.display_time = 30 # frames
+        # Set display time
+        self.display_time = 1500 # milliseconds
         self.time_left = 0
 
         # Build the button's rect object and center it.
@@ -133,6 +133,10 @@ class DialogueBox:
             border_radius=4)
         # Blit message onto transparent surface
         self.trans_surf.blit(self.msg_img, self.msg_img_rect)
+
+    def set_display_time(self):
+        """Define expiration time for dialogue box."""
+        self.time_left = pygame.time.get_ticks() + self.display_time
 
     def draw_dialogue(self):
         """Blit transparent surface onto display surface."""
