@@ -6,6 +6,7 @@ class AsciiDebug:
 
           self.status = False
           self.axis = 0
+          self.width = av_object.h_chars
 
 
      def print_columns_test(self, row):
@@ -25,12 +26,9 @@ class AsciiDebug:
 
 
      def print_rows_test(self, index, row):
-         # Define characters to print as list
-         row_list = [index for i in range(len(row))]
          # Join characters into single string
-         row_text = (' '.join([index for i in row_list]))
-
-         return row_text
+         row_text = ' '.join([index for i in list(row)])
+         return row_text[:self.width]
 
 
      def run_debug_columns(self, row):
