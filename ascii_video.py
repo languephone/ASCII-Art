@@ -272,12 +272,6 @@ class AsciiVideo:
         self.screenshot_confirm.set_display_time()
 
 
-    def render_text(self, text):
-        rendered_text = self.font.render(text, False, self.WHITE)
-
-        return rendered_text
-
-
     def run_game(self):
         while True:
 
@@ -305,13 +299,17 @@ class AsciiVideo:
             for index, row in enumerate(flipped):
                 
                 if self.debug.status:
-                    row_text = self.debug.print_rows_test(str(index), row)
+                    if index == self.v_chars // 2:
+                        row_text = self.debug.print_columns_test(row)
+                    else:
+                        row_text = self.debug.print_rows_test(index, row)
+
                 else:
                     # Define text to show on screen
                     row_text = self.convert_to_ascii(row)
 
                 # Create rendered text
-                rendered_text = self.render_text(row_text)
+                rendered_text = self.font.render(row_text, False, self.WHITE)
 
                 # increment y position of each text row by the line height of the font
                 self.screen.blit(rendered_text, (0, index * self.line_height))
