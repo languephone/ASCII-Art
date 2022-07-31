@@ -42,21 +42,33 @@ class AsciiDebug:
           # row_text = ' '.join([str(index) for i in list(row)])
           return row_text
 
+     def toggle_status(self):
+          if self.status:
+               self.status = False
+          else:
+               self.status = True
+
 
 class FramesPerSecond:
-    """A class to manage the fps display."""
-    def __init__(self, av_object):
-        """Initialize fps attributes."""
-        self.font = pygame.font.SysFont('helveticaneue', 18)
-        self.text_color = (0, 255, 0) # Bright green
-        self.h_pos = av_object.win_width + 15
-        self.v_pos = av_object.win_height - 25
-        self.screen = av_object.screen
-        self.clock = av_object.clock
-        self.status = False
+     """A class to manage the fps display."""
+     def __init__(self, av_object):
+          """Initialize fps attributes."""
+          self.font = pygame.font.SysFont('helveticaneue', 18)
+          self.text_color = (0, 255, 0) # Bright green
+          self.h_pos = av_object.win_width + 15
+          self.v_pos = av_object.win_height - 25
+          self.screen = av_object.screen
+          self.clock = av_object.clock
+          self.status = False
 
-    def display_fps(self):
+     def display_fps(self):
 
         fps = 'FPS:' + str(int(self.clock.get_fps()))
         fps_text = self.font.render(fps, True, self.text_color)
         self.screen.blit(fps_text, (self.h_pos, self.v_pos))
+
+     def toggle_status(self):
+          if self.status:
+               self.status = False
+          else:
+               self.status = True
