@@ -151,14 +151,14 @@ class FramesPerSecond:
         self.av_object = av_object
         self.font = pygame.font.SysFont('helveticaneue', 18)
         self.text_color = (0, 255, 0)
-
+        self.status = False
 
     def display_fps(self):
 
         self.fps = 'FPS:' + str(int(self.av_object.clock.get_fps()))
         self.fps_text = self.font.render(self.fps, True, self.text_color)
         self.av_object.screen.blit(self.fps_text,
-            (self.av_object.win_width + 25, self.av_object.win_height - 25))
+            (self.av_object.win_width + 25, self.av_object.win_height - 30))
 
 
 class UiElement:
@@ -178,7 +178,8 @@ class UiElement:
                 'buttons': ['Previous Set', 'Next Set']},
             {'text': 'Take screen shot',
                  'buttons': ['Image Only', 'Whole Window']},
-            {'text': 'Hold to enable debug mode', 'buttons': ['Debug']}
+            {'text': 'Debug mode',
+                 'buttons': ['Debug', 'Toggle FPS']}
         ]
 
         # Define vertical position of each element based on number of elements

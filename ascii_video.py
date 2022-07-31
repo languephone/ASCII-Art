@@ -141,8 +141,9 @@ class AsciiVideo:
                 mouse_pos = pygame.mouse.get_pos()
                 self.check_button_events(mouse_pos)
             elif event.type == pygame.MOUSEBUTTONUP:
-                # Debug only enabled when holding mouse down
+                # Debug buttons only enabled when holding mouse down
                 self.debug.status = False
+                self.fps.status = False
                 # Revert colour of buttons back to normal
                 for button in self.ui_elements.buttons:
                     button.button_color = (100, 100, 100)
@@ -196,6 +197,8 @@ class AsciiVideo:
                     self.save_screen_portion()
                 if button.msg == 'Debug':
                     self.debug.status = True
+                if button.msg == 'Toggle FPS':
+                    self.fps.status = True
 
 
     def change_font_size(self, factor):
@@ -295,7 +298,8 @@ class AsciiVideo:
                 separator.draw_single_line()
             for button in self.ui_elements.buttons:
                 button.draw_button()
-            self.fps.display_fps()
+            if self.fps.status:
+                self.fps.display_fps()
 
             # Display ASCII text
             for index, row in enumerate(flipped):
