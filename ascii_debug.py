@@ -1,3 +1,5 @@
+import pygame.font
+
 class AsciiDebug:
      """Class to manage debugging."""
 
@@ -46,3 +48,21 @@ class AsciiDebug:
           pygame.draw.line(av_object.screen, (0, 255, 255),
                (0, index * av_object.line_height),
                (av_object.win_width, index * av_object.line_height))
+
+
+class FramesPerSecond:
+    """A class to manage the fps display."""
+    def __init__(self, av_object):
+        """Initialize fps attributes."""
+
+        self.av_object = av_object
+        self.font = pygame.font.SysFont('helveticaneue', 18)
+        self.text_color = (0, 255, 0)
+        self.status = False
+
+    def display_fps(self):
+
+        self.fps = 'FPS:' + str(int(self.av_object.clock.get_fps()))
+        self.fps_text = self.font.render(self.fps, True, self.text_color)
+        self.av_object.screen.blit(self.fps_text,
+            (self.av_object.win_width + 25, self.av_object.win_height - 30))

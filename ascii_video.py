@@ -2,8 +2,8 @@ import cv2
 import pygame
 import sys
 import os
-from ascii_debug import AsciiDebug
-from interface import Instructions, Separator, Button, UiElement, FramesPerSecond, DialogueBox
+from ascii_debug import AsciiDebug, FramesPerSecond
+from interface import Instructions, Separator, Button, UiElement, DialogueBox
 
 # TODO: Deal with gap in text rows dynamically
 
