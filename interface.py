@@ -50,8 +50,8 @@ class Separator:
     def draw_single_line(self):
 
         pygame.draw.line(self.av_object.screen, (100, 100, 100),
-            start_pos=(self.win_width + 5, self.v_pos + 23),
-            end_pos=(self.win_width + 275, self.v_pos + 23))
+            start_pos=(self.win_width + 5, self.v_pos + 17),
+            end_pos=(self.win_width + 150, self.v_pos + 17))
 
 
 class Button:
@@ -73,7 +73,7 @@ class Button:
         self.h_pos = self.av_object.win_width + 5 + (h_index * (self.width + 5))
 
         # Build the button's rect object and center it.
-        self.rect = pygame.Rect(self.h_pos, v_pos + 30, self.width, self.height)
+        self.rect = pygame.Rect(self.h_pos, v_pos + 25, self.width, self.height)
 
         # Prep the button message.
         self._prep_msg()

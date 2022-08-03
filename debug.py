@@ -44,12 +44,11 @@ class FramesPerSecond:
      """A class to manage the fps display."""
      def __init__(self, av_object):
           """Initialize fps attributes."""
-          self.font = pygame.font.SysFont('helveticaneue', 18)
-          self.width, self.height = self.font.size('FPS: 100')
+          self.font = pygame.font.SysFont('helveticaneue', 10)
           self.text_color = (0, 255, 0) # Bright green
           self.background_color = av_object.BLACK
-          self.h_pos = av_object.win_width + 15
-          self.v_pos = av_object.win_height - 25
+          self.h_pos = av_object.win_width + 8
+          self.v_pos = av_object.win_height - 16
           self.screen = av_object.screen
           self.clock = av_object.clock
           self.status = False
