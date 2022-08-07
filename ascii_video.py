@@ -26,10 +26,11 @@ class AsciiVideo:
         self.WHITE = (255, 255, 255) 
         
         # Ascii characters
-        self.ascii_sets = ["""$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """,
-                               "Ñ@#W$9876543210?!abc;:+=-,._            ",
-                               "#WX?*:÷×+=-·        "
-                            ]
+        self.ascii_sets = [
+            """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """,
+            "Ñ@#W$9876543210?!abc;:+=-,._            ",
+            "#WX?*:÷×+=-·        "
+        ]
         self.ascii_set = 0
         self.prep_ascii_range()
 
