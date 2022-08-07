@@ -93,10 +93,9 @@ class Button:
 
 class DialogueBox:
     """A class to display messages to the user."""
-    def __init__(self, av_object, msg):
+    def __init__(self, av_object):
         """Initialize dialog box attributes."""
         self.av_object = av_object
-        self.msg = msg
 
         # Set the dimensions and properties of the box.
         self.width = int(self.av_object.win_width * 0.7)
@@ -114,6 +113,8 @@ class DialogueBox:
         # Build the button's rect object and center it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
 
+    def set_message(self, message):
+        self.msg = message
         self._prep_msg()
         self._create_transparent_surface()
 

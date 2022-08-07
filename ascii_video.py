@@ -7,6 +7,7 @@ from interface import Instructions, Separator, Button, UiElement, DialogueBox
 
 # TODO: Deal with gap in text rows dynamically
 # TODO: Show font size and contrast info on screen in debug window instead of terminal
+# TODO: Prevent screen grabs saving over previous screen grabs
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
@@ -30,7 +31,7 @@ class AsciiVideo:
                                "#WX?*:÷×+=-·        "
                             ]
         self.ascii_set = 0
-        self.set_ascii_range(0)
+        self.prep_ascii_range()
 
         # Create cv2 webcam capture object
         self.capture = cv2.VideoCapture(0)
@@ -75,7 +76,7 @@ class AsciiVideo:
         self._calc_pixel_size()
         self.debug = AsciiDebug(self)
         self.ui_elements = UiElement(self)
-        self.screenshot_confirm = DialogueBox(self, "Screenshot Saved")
+        self.dialogue_box = DialogueBox(self)
         self.fps = FramesPerSecond(self)
 
 
@@ -186,9 +187,9 @@ class AsciiVideo:
                 if button.msg == 'Increase Contrast':
                     self.change_contrast(1)
                 if button.msg == 'Previous Set':
-                    self.set_ascii_range(1)
+                    self.update_ascii_range(1)
                 if button.msg == 'Next Set':
-                    self.set_ascii_range(-1)
+                    self.update_ascii_range(-1)
                 if button.msg == 'Whole Window':
                     self.save_screen_image()
                 if button.msg == 'Image Only':
@@ -207,6 +208,8 @@ class AsciiVideo:
             self.font_size += factor
             self._create_font_object()
             self._calc_pixel_size()
+            self.dialogue_box.set_message(f'Font size: {self.font_size}')
+            self.dialogue_box.set_display_time()
 
 
     def change_contrast(self, factor):
@@ -221,18 +224,13 @@ class AsciiVideo:
                     self.ascii_sets[self.ascii_set]) + 10:
                 self.ascii_reverse.insert(0, ' ')
                 self.division_factor = 256 / len(self.ascii_reverse)
+        self.dialogue_box.set_message(f'Contrast: {len(self.ascii_reverse)}')
+        self.dialogue_box.set_display_time()
 
-        print(f'New Contrast: {len(self.ascii_reverse)}')
 
-
-    def set_ascii_range(self, increment):
+    def prep_ascii_range(self):
         """Reset characteristics based on different character sets."""
-        
-        # Increment range by one
-        self.ascii_set += increment
-        # Ensure incrementing wraps back around to first of list
-        self.ascii_set = self.ascii_set % len(self.ascii_sets)
-        print(f'Ascii Range: {self.ascii_set}')
+
         # Convert to list
         self.ascii_reverse = list(self.ascii_sets[self.ascii_set])
         # Reverse so that brighter pixels go higher in list
@@ -240,6 +238,16 @@ class AsciiVideo:
 
         # 8-bit (256) greyscale range to ascii range conversion factor
         self.division_factor = 256 / len(self.ascii_reverse)
+
+    
+    def update_ascii_range(self, increment):
+        """Change to next set in list and re-calc reversal."""
+        self.ascii_set += increment
+        # Ensure incrementing wraps back around to first of list
+        self.ascii_set = self.ascii_set % len(self.ascii_sets)
+        self.prep_ascii_range()
+        self.dialogue_box.set_message(f'Ascii set: {self.ascii_set + 1}')
+        self.dialogue_box.set_display_time()
 
 
     def save_screen_text(self):
@@ -256,8 +264,8 @@ class AsciiVideo:
         if not os.path.exists('saved_images'):
             os.mkdir('saved_images')
         pygame.image.save(self.screen, 'saved_images/screenshot.png')
-        self.screenshot_confirm.set_display_time()
-        # TODO: Prevent saving over previous screen grabs.
+        self.dialogue_box.set_message("Screenshot Saved")
+        self.dialogue_box.set_display_time()
 
 
     def save_screen_portion(self):
@@ -267,7 +275,8 @@ class AsciiVideo:
         portion = self.screen.subsurface(0, 0, self.win_width,
             self.win_height)
         pygame.image.save(portion, 'saved_images/screenshot.png')
-        self.screenshot_confirm.set_display_time()
+        self.dialogue_box.set_message("Screenshot Saved")
+        self.dialogue_box.set_display_time()
 
 
     def run_game(self):
@@ -313,8 +322,8 @@ class AsciiVideo:
                 self.screen.blit(rendered_text, (0, index * self.line_height))
 
             # Display dialogue boxes
-            if self.screenshot_confirm.time_left > pygame.time.get_ticks():
-                self.screenshot_confirm.draw_dialogue()
+            if self.dialogue_box.time_left > pygame.time.get_ticks():
+                self.dialogue_box.draw_dialogue()
 
             pygame.display.flip()
             self.clock.tick(self.frame_rate)
