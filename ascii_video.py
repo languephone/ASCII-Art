@@ -98,10 +98,6 @@ class AsciiVideo:
         self.h_chars = int(self.win_width / self.char_width)
         self.v_chars = int(self.win_height / self.line_height)
 
-        print(f'Font Size: {self.font_size}')
-        print(f'Char Width: {self.char_width}, Line Height: {self.line_height}')
-        print(f'Horiz. Chars: {self.h_chars}, Vert. Chars: {self.v_chars}')
-
 
     def _resize_image(self, image):
         # Convert to grayscale
@@ -210,6 +206,11 @@ class AsciiVideo:
             self._calc_pixel_size()
             self.dialogue_box.set_message(f'Font size: {self.font_size}')
             self.dialogue_box.set_display_time()
+
+            if self.debug.status:
+                print(f'Font Size: {self.font_size}')
+                print(f'Char Width: {self.char_width}, Line Height: {self.line_height}')
+                print(f'Horiz. Chars: {self.h_chars}, Vert. Chars: {self.v_chars}')
 
 
     def change_contrast(self, factor):
