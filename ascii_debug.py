@@ -7,13 +7,7 @@ class AsciiDebug:
           """Initialize the debugging tools."""
 
           self.status = False
-          self.axis = 0
-          self.width = av_object.h_chars
-          self.text_color = av_object.WHITE
-          self.font = av_object.font
-          self.line_height = av_object.line_height
-          self.win_width = av_object.win_width
-          self.screen = av_object.screen
+          self.av_object = av_object
 
      def print_columns_test(self, row):
           """
@@ -37,7 +31,7 @@ class AsciiDebug:
           """
          
           # Use row length to only print characters in middle of screen
-          return str(index).center(self.width)
+          return str(index).center(self.av_object.h_chars)
 
      def toggle_status(self):
           if self.status:
