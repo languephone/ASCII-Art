@@ -2,6 +2,7 @@ import cv2
 import pygame
 import sys
 import os
+import sound_effects as se
 from ascii_debug import AsciiDebug, FramesPerSecond
 from interface import Instructions, Separator, Button, UiElement, DialogueBox
 
@@ -177,24 +178,34 @@ class AsciiVideo:
                 button._prep_msg()
                 if button.msg == 'Decrease Font':
                     self.change_font_size(-1)
+                    se.decrease_button.play()
                 if button.msg == 'Increase Font':
                     self.change_font_size(1)
+                    se.increase_button.play()
                 if button.msg == 'Decrease Contrast':
                     self.change_contrast(-1)
+                    se.decrease_button.play()
                 if button.msg == 'Increase Contrast':
                     self.change_contrast(1)
+                    se.increase_button.play()
                 if button.msg == 'Previous Set':
                     self.update_ascii_range(1)
+                    se.decrease_button.play()
                 if button.msg == 'Next Set':
                     self.update_ascii_range(-1)
-                if button.msg == 'Whole Window':
-                    self.save_screen_image()
+                    se.increase_button.play()
                 if button.msg == 'Image Only':
                     self.save_screen_portion()
+                    se.decrease_button.play()
+                if button.msg == 'Whole Window':
+                    self.save_screen_image()
+                    se.increase_button.play()
                 if button.msg == 'Debug':
                     self.debug.toggle_status()
+                    se.decrease_button.play()
                 if button.msg == 'Toggle FPS':
                     self.fps.toggle_status()
+                    se.increase_button.play()
 
 
     def change_font_size(self, factor):
