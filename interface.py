@@ -66,7 +66,9 @@ class Button:
         self.text_color = (200, 200, 200)
         self.font = pygame.font.SysFont('helveticaneue', 12)
 
-        self.h_pos = self.av_object.win_width + (self.width * h_index) + (5 * h_index) + 5
+        # Start button at edge of display window, then indent by 5, with 5px
+        # space between each button
+        self.h_pos = self.av_object.win_width + 5 + (h_index * (self.width + 5))
 
         # Build the button's rect object and center it.
         self.rect = pygame.Rect(self.h_pos, v_pos + 30, self.width, self.height)
