@@ -6,6 +6,7 @@ from ascii_debug import AsciiDebug, FramesPerSecond
 from interface import Instructions, Separator, Button, UiElement, DialogueBox
 
 # TODO: Deal with gap in text rows dynamically
+# TODO: Show font size and contrast info on screen in debug window instead of terminal
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
