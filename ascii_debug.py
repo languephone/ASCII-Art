@@ -32,15 +32,12 @@ class AsciiDebug:
 
      def print_rows_test(self, index, row):
           """
-          Print repeated columns of numbers to visually confirm the number
-          of characters in each column printed to screen.
+          Print column of numbers to visually confirm the number
+          of horizontal rows on screen.
           """
          
           # Use row length to only print characters in middle of screen
-          row_text = str(index).center(self.width)
-          # Join characters into single string
-          # row_text = ' '.join([str(index) for i in list(row)])
-          return row_text
+          return str(index).center(self.width)
 
      def toggle_status(self):
           if self.status:
