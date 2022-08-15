@@ -5,6 +5,7 @@ import os
 import sound_effects as se
 from ascii_debug import AsciiDebug, FramesPerSecond
 from interface import Instructions, Separator, Button, UiElement, DialogueBox
+from camera import Camera
 
 # TODO: Deal with gap in text rows dynamically
 # TODO: Show font size and contrast info on screen in debug window instead of terminal
@@ -35,19 +36,8 @@ class AsciiVideo:
         self.ascii_set = 0
         self.prep_ascii_range()
 
-        # Create cv2 webcam capture object
-        self.capture = cv2.VideoCapture(0)
+        self.camera = Camera()
         
-        # Exit program if no camera
-        if not self.capture.isOpened():
-            sys.exit("No camera detected")
-
-        # Get camera resolution and frame rate to define pixels needed
-        self.img_width = int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.img_height = int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        img_ratio = self.img_width / self.img_height
-        self.frame_rate = self.capture.get(cv2.CAP_PROP_FPS)
-
         # Setup Pygame
         pygame.init()
         pygame.display.set_caption('Ascii Art')
@@ -61,17 +51,17 @@ class AsciiVideo:
 
         # Define window width based on image resolution
         # If image ratio is wider than 4:3, crop to 4:3
-        if img_ratio > 3 / 3:
-            img_ratio = 3 / 3
-        self.win_width = int(self.win_height * img_ratio)
+        if self.camera.img_ratio > 3 / 3:
+            self.camera.img_ratioimg_ratio = 3 / 3
+        self.win_width = int(self.win_height * self.camera.img_ratio)
 
         # Set window size in pygame, with 300 px for the UI
         self.screen = pygame.display.set_mode(
             (self.win_width + 300, self.win_height))
 
         # Define how to crop image to fit window size
-        img_adjustment = int(self.img_height * img_ratio)
-        self.crop_width = int((self.img_width - img_adjustment) / 2)
+        img_adjustment = int(self.camera.img_height * self.camera.img_ratio)
+        self.crop_width = int((self.camera.img_width - img_adjustment) / 2)
 
         # Create program objects
         self._create_font_object()
@@ -106,7 +96,7 @@ class AsciiVideo:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Crop horizontal size to match window ratio
-        cropped = gray[:, self.crop_width:self.img_width - self.crop_width]
+        cropped = gray[:, self.crop_width:self.camera.img_width - self.crop_width]
 
         # Reduce pixels for processing
         small = cv2.resize(cropped, (self.h_chars, self.v_chars),
@@ -130,7 +120,7 @@ class AsciiVideo:
         for event in pygame.event.get():
             # Check if game quit
             if event.type == pygame.QUIT:
-                self.capture.release()
+                self.camera.capture.release()
                 sys.exit()
             # Check for pressed keys
             elif event.type == pygame.KEYDOWN:
@@ -265,7 +255,7 @@ class AsciiVideo:
 
     def save_screen_text(self):
         with open('saved_images/screen_shot.txt', 'w') as f:
-            ret, frame = self.capture.read()
+            ret, frame = self.camera.capture.read()
             flipped = self._resize_image(frame)
 
             for row in flipped:
@@ -298,7 +288,7 @@ class AsciiVideo:
             self.check_events()
 
             # Capture video and resize
-            ret, frame = self.capture.read()
+            ret, frame = self.camera.capture.read()
 
             flipped = self._resize_image(frame)
 
@@ -340,7 +330,7 @@ class AsciiVideo:
                 self.dialogue_box.draw_dialogue()
 
             pygame.display.flip()
-            self.clock.tick(self.frame_rate)
+            self.clock.tick(self.camera.frame_rate)
 
 
 if __name__ == '__main__':
