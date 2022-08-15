@@ -21,7 +21,7 @@ class AsciiVideo:
         self.font_size = 10
         self.font_name = 'couriernew'
         # Adjustment to deal with blank space at top & bottom of characters
-        self.line_height_adjustment = 4
+        self.line_height_adjustment = 2
 
         # Colours
         self.BLACK = (25, 25, 25)
@@ -52,7 +52,7 @@ class AsciiVideo:
         # Define window width based on image resolution
         # If image ratio is wider than 4:3, crop to 4:3
         if self.camera.img_ratio > 3 / 3:
-            self.camera.img_ratioimg_ratio = 3 / 3
+            self.camera.img_ratio = 3 / 3
         self.win_width = int(self.win_height * self.camera.img_ratio)
 
         # Set window size in pygame, with 300 px for the UI
