@@ -329,7 +329,8 @@ class AsciiVideo:
                     row_text = self.convert_to_ascii(row)
 
                 # Create rendered text
-                rendered_text = self.font.render(row_text, False, self.WHITE)
+                rendered_text = self.font.render(row_text, False, self.WHITE,
+                    self.BLACK)
 
                 # increment y position of each text row by the line height of the font
                 self.screen.blit(rendered_text, (0, index * self.line_height))

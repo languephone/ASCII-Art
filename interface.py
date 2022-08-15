@@ -14,6 +14,7 @@ class Instructions:
         # Font settings for instructions.
         self.text_color = (255, 255, 255)
         self.font = pygame.font.SysFont('helveticaneue', 18)
+        self.background_color = av_object.BLACK
 
         # Create image from text
         self.instruction_image = self.prep_text()
@@ -22,7 +23,8 @@ class Instructions:
     def prep_text(self):
         """Turn the text into a rendered image for display."""
 
-        text_image = self.font.render(self.msg, True, self.text_color)
+        text_image = self.font.render(self.msg, True, self.text_color,
+            self.background_color)
 
         return text_image
 
