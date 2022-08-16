@@ -96,7 +96,9 @@ class AsciiVideo:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Crop horizontal size to match window ratio
-        cropped = gray[:, self.crop_width:self.camera.img_width - self.crop_width]
+        horizontal_crop = slice(self.crop_width,
+            self.camera.img_width - self.crop_width)
+        cropped = gray[:, horizontal_crop]
 
         # Reduce pixels for processing
         small = cv2.resize(cropped, (self.h_chars, self.v_chars),
