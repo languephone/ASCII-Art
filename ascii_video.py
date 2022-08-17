@@ -3,7 +3,7 @@ import pygame
 import sys
 import os
 import sound_effects as se
-from ascii_debug import AsciiDebug, FramesPerSecond
+from debug import AsciiDebug, FramesPerSecond
 from interface import Instructions, Separator, Button, UiElement, DialogueBox
 from camera import Camera
 
@@ -96,9 +96,9 @@ class AsciiVideo:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Crop horizontal size to match window ratio
-        horizontal_crop = slice(self.crop_width,
+        horizontal_slice = slice(self.crop_width,
             self.camera.img_width - self.crop_width)
-        cropped = gray[:, horizontal_crop]
+        cropped = gray[:, horizontal_slice]
 
         # Reduce pixels for processing
         small = cv2.resize(cropped, (self.h_chars, self.v_chars),
