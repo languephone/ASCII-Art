@@ -45,6 +45,7 @@ class FramesPerSecond:
      def __init__(self, av_object):
           """Initialize fps attributes."""
           self.font = pygame.font.SysFont('helveticaneue', 18)
+          self.width, self.height = self.font.size('FPS: 100')
           self.text_color = (0, 255, 0) # Bright green
           self.background_color = av_object.BLACK
           self.h_pos = av_object.win_width + 15
@@ -61,6 +62,10 @@ class FramesPerSecond:
           self.screen.blit(fps_text, (self.h_pos, self.v_pos))
 
      def toggle_status(self):
+          # Fill screen portion with black to cover up text
+          self.screen.fill(self.background_color, (self.h_pos, self.v_pos,
+               self.width, self.height))
+          
           if self.status:
                self.status = False
           else:

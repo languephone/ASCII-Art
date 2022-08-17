@@ -285,23 +285,27 @@ class AsciiVideo:
 
 
     def run_game(self):
+    
+        # Fill screen with black once to set up background colour.
+        # Text rows have solid backgrounds, so will overwrite the previous
+        # frame's text, removing the need to fill the screen on each frame.
+        self.screen.fill(self.BLACK)
+
+        # Draw static UI elements once
+        for instruction in self.ui_elements.instructions:
+            instruction.draw_instructions()
+        for separator in self.ui_elements.separators:
+            separator.draw_single_line()
+
         while True:
 
             self.check_events()
 
             # Capture video and resize
             ret, frame = self.camera.capture.read()
-
             flipped = self._resize_image(frame)
 
-            # Fill screen with black on each frame to overwrite previous frame
-            self.screen.fill(self.BLACK)
-
             # Display UI
-            for instruction in self.ui_elements.instructions:
-                instruction.draw_instructions()
-            for separator in self.ui_elements.separators:
-                separator.draw_single_line()
             for button in self.ui_elements.buttons:
                 button.draw_button()
             if self.fps.status:
