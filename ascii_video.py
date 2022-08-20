@@ -1,7 +1,7 @@
-import cv2
-import pygame
 import sys
 import os
+import cv2
+import pygame
 import sound_effects as se
 from debug import AsciiDebug, FramesPerSecond
 from interface import Instructions, Separator, Button, UiElement, DialogueBox
