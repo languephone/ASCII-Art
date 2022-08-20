@@ -10,6 +10,7 @@ from camera import Camera
 # TODO: Deal with gap in text rows dynamically
 # TODO: Show font size and contrast info on screen in debug window instead of terminal
 # TODO: Prevent screen grabs saving over previous screen grabs
+# TODO: Use cv2 thresholding function to prevent need for trailing spaces on Ascii sets
 
 class AsciiVideo:
     """Overall class to run the ascii video program."""
@@ -236,10 +237,8 @@ class AsciiVideo:
     def prep_ascii_range(self):
         """Reset characteristics based on different character sets."""
 
-        # Convert to list
-        self.ascii_reverse = list(self.ascii_sets[self.ascii_set])
         # Reverse so that brighter pixels go higher in list
-        self.ascii_reverse.reverse()
+        self.ascii_reverse = self.ascii_sets[self.ascii_set][::-1]
 
         # 8-bit (256) greyscale range to ascii range conversion factor
         self.division_factor = 256 / len(self.ascii_reverse)
