@@ -214,6 +214,12 @@ class AsciiVideo:
             self.dialogue_box.set_message(f'Font size: {self.font_size}')
             self.dialogue_box.set_display_time()
 
+            # New size may leave gaps at bottom of screen where previous text
+            # appeared.  Fill with black to wipe these leftover characters.
+            self.screen.fill(self.BLACK,
+                (0, 0, self.win_width, self.win_height))
+
+
             if self.debug.status:
                 print(f'Font Size: {self.font_size}')
                 print(f'Char Width: {self.char_width}, Line Height: {self.line_height}')
