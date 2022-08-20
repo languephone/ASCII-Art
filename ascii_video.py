@@ -223,12 +223,12 @@ class AsciiVideo:
         # Limit addition/removal of space characters
         if factor < 0:
             if len(self.ascii_reverse) > len(self.ascii_sets[self.ascii_set]):
-                self.ascii_reverse.pop(0)
+                self.ascii_reverse = self.ascii_reverse[1:]
                 self.division_factor = 256 / len(self.ascii_reverse)
         elif factor > 0:
             if len(self.ascii_reverse) < len(
                     self.ascii_sets[self.ascii_set]) + 10:
-                self.ascii_reverse.insert(0, ' ')
+                self.ascii_reverse = ' '.join((' ', self.ascii_reverse))
                 self.division_factor = 256 / len(self.ascii_reverse)
         self.dialogue_box.set_message(f'Contrast: {len(self.ascii_reverse)}')
         self.dialogue_box.set_display_time()
