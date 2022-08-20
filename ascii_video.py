@@ -108,12 +108,15 @@ class AsciiVideo:
         # Mirror reverse
         flipped = cv2.flip(small, 1)
 
-        return flipped
+        # Divide by number of characters in Ascii set
+        ranged = cv2.numpy.divide(flipped, self.division_factor).astype(int)
+
+        return ranged
 
 
     def convert_to_ascii(self, image_row):
-        row_text = (''.join([self.ascii_reverse[int(pixel / 
-            self.division_factor)] for pixel in image_row]))
+        row_text = (''.join([self.ascii_reverse[pixel]
+            for pixel in image_row]))
 
         return row_text
 
@@ -335,7 +338,7 @@ class AsciiVideo:
                 self.dialogue_box.draw_dialogue()
 
             pygame.display.flip()
-            self.clock.tick(self.camera.frame_rate)
+            self.clock.tick(self.camera.frame_rate + 5)
 
 
 if __name__ == '__main__':
