@@ -109,9 +109,8 @@ class AsciiVideo:
         flipped = cv2.flip(small, 1)
 
         # Divide by number of characters in Ascii set
-        ranged = cv2.numpy.divide(flipped, self.division_factor).astype(int)
-
-        return ranged
+        return cv2.numpy.divide(flipped, self.division_factor) \
+                        .astype(cv2.numpy.uint8)
 
 
     def convert_to_ascii(self, image_row):
