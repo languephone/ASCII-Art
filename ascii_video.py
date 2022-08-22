@@ -28,22 +28,32 @@ class AsciiVideo:
         self.BLACK = (25, 25, 25)
         self.WHITE = (255, 255, 255) 
         
-        # Ascii characters
+        # Ascii character sets
         self.ascii_sets = [
             """$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.                            """,
             "Ñ@#W$9876543210?!abc;:+=-,._            ",
             "#WX?*:÷×+=-·        "
         ]
         self.ascii_set = 0
-        self.prep_ascii_range()
-
-        self.camera = Camera()
-        
+    
         # Setup Pygame
         pygame.init()
         pygame.display.set_caption('Ascii Art')
         self.clock = pygame.time.Clock()
 
+        # Create program objects
+        self.camera = Camera()
+        self._prep_ascii_range()
+        self._calc_screen_size()
+        self._create_font_object()
+        self._calc_pixel_size()
+        self.debug = AsciiDebug(self)
+        self.ui_elements = UiElement(self)
+        self.dialogue_box = DialogueBox(self)
+        self.fps = FramesPerSecond(self)
+
+
+    def _calc_screen_size(self):
         # Get monitor width & height
         monitor_width, monitor_height = pygame.display.get_desktop_sizes()[0]
         
@@ -51,7 +61,7 @@ class AsciiVideo:
         self.win_height = int(monitor_height * 0.6)
 
         # Define window width based on image resolution
-        # If image ratio is wider than 4:3, crop to 4:3
+        # If image ratio is wider than 3:3, crop to 3:3
         if self.camera.img_ratio > 3 / 3:
             self.camera.img_ratio = 3 / 3
         self.win_width = int(self.win_height * self.camera.img_ratio)
@@ -63,14 +73,6 @@ class AsciiVideo:
         # Define how to crop image to fit window size
         img_adjustment = int(self.camera.img_height * self.camera.img_ratio)
         self.crop_width = int((self.camera.img_width - img_adjustment) / 2)
-
-        # Create program objects
-        self._create_font_object()
-        self._calc_pixel_size()
-        self.debug = AsciiDebug(self)
-        self.ui_elements = UiElement(self)
-        self.dialogue_box = DialogueBox(self)
-        self.fps = FramesPerSecond(self)
 
 
     def _create_font_object(self):
@@ -108,14 +110,13 @@ class AsciiVideo:
         # Mirror reverse
         flipped = cv2.flip(small, 1)
 
-        # Divide by number of characters in Ascii set
+        # Divide pixel value by number of characters in Ascii set
         return cv2.numpy.divide(flipped, self.division_factor) \
                         .astype(cv2.numpy.uint8)
 
 
     def convert_to_ascii(self, image_row):
-        row_text = (''.join([self.ascii_reverse[pixel]
-            for pixel in image_row]))
+        row_text = (''.join([self.ascii_reverse[pixel] for pixel in image_row]))
 
         return row_text
 
@@ -193,7 +194,7 @@ class AsciiVideo:
                     self.save_screen_portion()
                     se.decrease_button.play()
                 if button.msg == 'Whole Window':
-                    self.save_screen_image()
+                    self.save_screen_image(self.screen)
                     se.increase_button.play()
                 if button.msg == 'Debug':
                     self.debug.toggle_status()
@@ -206,20 +207,20 @@ class AsciiVideo:
     def change_font_size(self, factor):
         """Update font size and re-calc char sizes."""
         # Limit font size range to between 7pt and 22pt
-        if self.font_size > 7 and factor < 0\
-            or self.font_size < 22 and factor > 0:
+        if self.font_size > 7 and factor < 0 \
+                or self.font_size < 22 and factor > 0:
             self.font_size += factor
             self._create_font_object()
             self._calc_pixel_size()
             self.dialogue_box.set_message(f'Font size: {self.font_size}')
             self.dialogue_box.set_display_time()
 
-            # New size may leave gaps at bottom of screen where previous text
+            # New size may leave gaps at edges of screen where previous text
             # appeared.  Fill with black to wipe these leftover characters.
             self.screen.fill(self.BLACK,
                 (0, 0, self.win_width, self.win_height))
 
-
+            # Output size info to terminal if debug is on
             if self.debug.status:
                 print(f'Font Size: {self.font_size}')
                 print(f'Char Width: {self.char_width}, Line Height: {self.line_height}')
@@ -242,7 +243,7 @@ class AsciiVideo:
         self.dialogue_box.set_display_time()
 
 
-    def prep_ascii_range(self):
+    def _prep_ascii_range(self):
         """Reset characteristics based on different character sets."""
 
         # Reverse so that brighter pixels go higher in list
@@ -257,7 +258,7 @@ class AsciiVideo:
         self.ascii_set += increment
         # Ensure incrementing wraps back around to first of list
         self.ascii_set = self.ascii_set % len(self.ascii_sets)
-        self.prep_ascii_range()
+        self._prep_ascii_range()
         self.dialogue_box.set_message(f'Ascii set: {self.ascii_set + 1}')
         self.dialogue_box.set_display_time()
 
@@ -271,24 +272,20 @@ class AsciiVideo:
                 f.write(self.convert_to_ascii(row) + '\n')
 
 
-    def save_screen_image(self):
+    def save_screen_image(self, screen_portion):
         """Save image file of entire pygame screen."""
         if not os.path.exists('saved_images'):
             os.mkdir('saved_images')
-        pygame.image.save(self.screen, 'saved_images/screenshot.png')
+        pygame.image.save(screen_portion, 'saved_images/screenshot.png')
         self.dialogue_box.set_message("Screenshot Saved")
         self.dialogue_box.set_display_time()
 
 
     def save_screen_portion(self):
         """Save image file of video portion of pygame screen."""
-        if not os.path.exists('saved_images'):
-            os.mkdir('saved_images')
-        portion = self.screen.subsurface(0, 0, self.win_width,
+        video_portion = self.screen.subsurface(0, 0, self.win_width,
             self.win_height)
-        pygame.image.save(portion, 'saved_images/screenshot.png')
-        self.dialogue_box.set_message("Screenshot Saved")
-        self.dialogue_box.set_display_time()
+        self.save_screen_image(video_portion)
 
 
     def run_game(self):
